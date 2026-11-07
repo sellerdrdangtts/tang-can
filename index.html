@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Tăng Cân Khỏe</title>
+<style>
+:root{--bg:#f6f7f4;--card:#fff;--ink:#1f2a24;--mut:#6b776f;--pri:#2f9e6b;--pri2:#e6f5ed;--acc:#f59f00;--line:#e4e8e2;--bad:#e03131}
+@media(prefers-color-scheme:dark){:root{--bg:#121714;--card:#1b231e;--ink:#eaf1ec;--mut:#93a39a;--pri:#4cc38a;--pri2:#1f3329;--line:#2a352e}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:84px}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:4px 0 2px}h2{font-size:17px;margin:0 0 10px}
+.sub{color:var(--mut);font-size:14px;margin:0 0 14px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.stat{background:var(--pri2);border-radius:12px;padding:10px;text-align:center}
+.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--mut)}
+.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .4s}
+button,input,select{font:inherit;color:var(--ink)}
+button{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
+button.ghost{background:transparent;color:var(--pri);border:1px solid var(--pri)}
+button.sm{padding:5px 10px;font-size:14px}
+input,select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
+label{font-size:13px;color:var(--mut);display:block}
+.f{flex:1;min-width:100px}
+nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center}
+nav button{flex:1;max-width:180px;background:none;color:var(--mut);border-radius:0;padding:10px 4px;font-size:12px}
+nav button span{display:block;font-size:20px}nav button.on{color:var(--pri);font-weight:600}
+.tab{display:none}.tab.on{display:block}
+.meal{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.meal:first-of-type{border-top:0}
+.meal input[type=checkbox]{width:24px;height:24px;accent-color:var(--pri)}
+.meal .t{font-weight:600;min-width:52px;color:var(--pri)}
+.meal.done .d{text-decoration:line-through;color:var(--mut)}
+.d small{display:block;color:var(--mut)}
+.ex{padding:12px 0;border-top:1px solid var(--line)}.ex:first-of-type{border-top:0}
+.tag{display:inline-block;background:var(--pri2);color:var(--pri);border-radius:20px;padding:1px 10px;font-size:12px;margin-left:6px}
+.week{display:flex;gap:6px;margin-bottom:12px}
+.week button{flex:1;background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:8px 0;font-size:13px}
+.week button.on{background:var(--pri);color:#fff;border-color:var(--pri)}.week button.rest{opacity:.6}
+.timer{font-size:40px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;display:none;z-index:9;max-width:90%}
+svg{width:100%;height:auto;display:block}
+.hist{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
+.note{font-size:13px;color:var(--mut);background:var(--bg);border-radius:10px;padding:10px;margin-top:10px}
+</style>
+</head>
+<body>
+<div class="toast" id="toast"></div>
+<div class="wrap">
+
+<!-- HÔM NAY -->
+<section class="tab on" id="t-home">
+  <h1 id="hello">Chào buổi sáng 👋</h1>
+  <p class="sub" id="today"></p>
+  <div class="card">
+    <div class="grid">
+      <div class="stat"><b id="sCur">--</b><span>Cân nặng (kg)</span></div>
+      <div class="stat"><b id="sGoal">--</b><span>Mục tiêu (kg)</span></div>
+      <div class="stat"><b id="sBmi">--</b><span>BMI</span></div>
+    </div>
+    <div style="margin-top:14px"><div class="row" style="justify-content:space-between"><small id="progTxt">Tiến độ</small><small id="progPct"></small></div><div class="bar"><i id="prog"></i></div></div>
+  </div>
+  <div class="card">
+    <h2>🍽️ Bữa ăn hôm nay <span class="tag" id="kcalTag"></span></h2>
+    <div id="homeMeals"></div>
+  </div>
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div><h2 style="margin:0">💧 Nước uống</h2><small class="sub" id="waterTxt"></small></div>
+      <div class="row"><button class="ghost sm" onclick="water(-1)">−</button><button class="sm" onclick="water(1)">+ 1 ly</button></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>💪 Bài tập hôm nay</h2>
+    <p id="homeWorkout" class="sub"></p>
+    <button onclick="go('workout')">Xem bài tập</button>
+  </div>
+</section>
+
+<!-- CÂN NẶNG -->
+<section class="tab" id="t-weight">
+  <h1>Theo dõi cân nặng</h1><p class="sub">Cân vào buổi sáng, sau khi đi vệ sinh, trước khi ăn.</p>
+  <div class="card">
+    <div class="row">
+      <div class="f"><label>Cân hôm nay (kg)</label><input id="wIn" type="number" step="0.1" inputmode="decimal" placeholder="vd 52.4"></div>
+      <div class="f" style="flex:0"><label>&nbsp;</label><button onclick="addWeight()">Lưu</button></div>
+    </div>
+  </div>
+  <div class="card"><h2>Biểu đồ</h2><div id="chart"></div><p class="sub" id="chartNote" style="margin:8px 0 0"></p></div>
+  <div class="card"><h2>Lịch sử</h2><div id="hist"></div></div>
+  <div class="card">
+    <h2>Thông tin cá nhân</h2>
+    <div class="row">
+      <div class="f"><label>Chiều cao (cm)</label><input id="pH" type="number"></div>
+      <div class="f"><label>Tuổi</label><input id="pA" type="number"></div>
+      <div class="f"><label>Giới tính</label><select id="pS"><option value="m">Nam</option><option value="f">Nữ</option></select></div>
+      <div class="f"><label>Mục tiêu (kg)</label><input id="pG" type="number" step="0.5"></div>
+    </div>
+    <div class="row" style="margin-top:10px"><button onclick="saveProfile()">Lưu thông tin</button><button class="ghost" onclick="demoData()">Nạp dữ liệu mẫu</button><button class="ghost" onclick="resetAll()">Xóa hết</button></div>
+    <div class="note" id="kcalNote"></div>
+  </div>
+</section>
+
+<!-- ĂN UỐNG -->
+<section class="tab" id="t-meal">
+  <h1>Lịch ăn &amp; nhắc nhở</h1><p class="sub">Người gầy cần ăn 5–6 bữa nhỏ, đều đặn, dư khoảng 300–500 kcal/ngày.</p>
+  <div class="card">
+    <div class="row" style="justify-content:space-between">
+      <div><b>🔔 Nhắc đúng giờ</b><div class="sub" style="margin:0">Cần để tab mở. Bấm bật để cho phép thông báo.</div></div>
+      <button id="remBtn" onclick="toggleRemind()">Bật</button>
+    </div>
+  </div>
+  <div class="card"><h2>Thực đơn mẫu</h2><div id="mealList"></div>
+    <div class="note">Mẹo: thêm 1 thìa dầu ô liu / bơ đậu phộng, ăn thêm sữa nguyên kem, chuối, yến mạch, khoai lang để dễ tăng calo mà không bị ngán.</div>
+  </div>
+</section>
+
+<!-- TẬP LUYỆN -->
+<section class="tab" id="t-workout">
+  <h1>Tập tại nhà</h1><p class="sub">Không cần dụng cụ. Mục tiêu là tăng cơ: tăng dần số rep mỗi tuần, không cần tập quá lâu.</p>
+  <div class="week" id="week"></div>
+  <div class="card">
+    <h2 id="wTitle"></h2><p class="sub" id="wDesc"></p>
+    <div id="exList"></div>
+    <button id="doneBtn" style="margin-top:12px;width:100%" onclick="doneWorkout()">✅ Hoàn thành buổi tập</button>
+  </div>
+  <div class="card">
+    <h2>⏱️ Hẹn giờ nghỉ giữa hiệp</h2>
+    <div class="timer" id="timer">60</div>
+    <div class="row" style="justify-content:center;margin-top:10px">
+      <button class="ghost sm" onclick="startTimer(45)">45s</button><button class="ghost sm" onclick="startTimer(60)">60s</button><button class="ghost sm" onclick="startTimer(90)">90s</button>
+    </div>
+  </div>
+  <div class="note">Ngủ đủ 7–8 tiếng và ăn đủ đạm (khoảng 1.6–2 g/kg cân nặng) quan trọng ngang việc tập. Nếu đau nhói hoặc chóng mặt thì dừng lại.</div>
+</section>
+
+</div>
+
+<nav>
+  <button data-t="home" class="on"><span>🏠</span>Hôm nay</button>
+  <button data-t="weight"><span>⚖️</span>Cân nặng</button>
+  <button data-t="meal"><span>🍽️</span>Ăn uống</button>
+  <button data-t="workout"><span>💪</span>Tập luyện</button>
+</nav>
+
+<script>
+const $=id=>document.getElementById(id);
+const KEY='tangcan_v1';
+const MEALS=[
+ {id:'m1',t:'06:30',n:'Bữa sáng',d:'3 trứng + 2 lát bánh mì bơ + 1 ly sữa',k:650},
+ {id:'m2',t:'09:30',n:'Phụ sáng',d:'1 chuối + 2 thìa bơ đậu phộng',k:300},
+ {id:'m3',t:'12:00',n:'Bữa trưa',d:'2 chén cơm + 150g thịt/cá + rau + 1 thìa dầu',k:800},
+ {id:'m4',t:'15:30',n:'Phụ chiều',d:'Sữa chua + 1 nắm hạt (hạnh nhân, óc chó)',k:300},
+ {id:'m5',t:'18:30',n:'Bữa tối',d:'2 chén cơm + ức gà/cá + canh + khoai lang',k:750},
+ {id:'m6',t:'21:30',n:'Trước ngủ',d:'1 ly sữa nguyên kem + yến mạch hoặc bánh mì',k:300}
+];
+const PLAN=[ // 0 = Chủ nhật
+ {n:'Chủ nhật',s:'CN',rest:true,title:'Nghỉ ngơi',desc:'Đi bộ nhẹ 20–30 phút, giãn cơ. Cơ lớn lên khi nghỉ.',ex:[['Đi bộ nhẹ','20–30 phút','Thở đều, không cần nhanh'],['Giãn cơ toàn thân','5–10 phút','Giữ mỗi tư thế 20–30 giây']]},
+ {n:'Thứ 2',s:'T2',title:'Thân trên',desc:'Ngực, vai, tay sau.',ex:[['Hít đất (quỳ gối nếu khó)','4 hiệp × 8–12','Hạ chậm 3 giây, đẩy lên dứt khoát'],['Hít đất kim cương','3 hiệp × 6–10','Tay sau (triceps)'],['Dips ghế','3 hiệp × 10–12','Dùng 2 ghế chắc chắn hoặc mép giường'],['Pike push-up','3 hiệp × 6–10','Tập vai']]},
+ {n:'Thứ 3',s:'T3',rest:true,title:'Nghỉ / đi bộ',desc:'Đi bộ nhẹ, giãn cơ, ăn đủ bữa.',ex:[['Đi bộ nhẹ','20 phút',''],['Giãn cơ','5–10 phút','']]},
+ {n:'Thứ 4',s:'T4',title:'Chân & mông',desc:'Nhóm cơ lớn nhất, tăng cân hiệu quả nhất.',ex:[['Squat','4 hiệp × 12–15','Lưng thẳng, gối theo hướng mũi chân'],['Lunge (bước chân)','3 hiệp × 10/bên','Cầm chai nước 1.5L mỗi tay cho nặng'],['Glute bridge','3 hiệp × 15','Siết mông 2 giây ở trên'],['Nhón gót','3 hiệp × 20','Bắp chân']]},
+ {n:'Thứ 5',s:'T5',rest:true,title:'Nghỉ / đi bộ',desc:'Phục hồi. Không bỏ bữa phụ.',ex:[['Đi bộ nhẹ','20 phút',''],['Giãn cơ','5–10 phút','']]},
+ {n:'Thứ 6',s:'T6',title:'Lưng & bụng',desc:'Dùng balo nhét sách làm tạ.',ex:[['Superman','3 hiệp × 12','Nâng tay chân cùng lúc, giữ 2 giây'],['Balo row (cúi người kéo balo)','4 hiệp × 10–12','Bóp bả vai khi kéo'],['Plank','3 hiệp × 30–45s','Người thẳng như tấm ván'],['Gập bụng','3 hiệp × 15','Không kéo cổ']]},
+ {n:'Thứ 7',s:'T7',title:'Toàn thân',desc:'Kết hợp, tăng độ khó so với tuần trước.',ex:[['Squat có balo','4 hiệp × 12','Ôm balo trước ngực'],['Hít đất','3 hiệp × max','Ghi lại số rep để vượt tuần sau'],['Lunge đi bộ','3 hiệp × 10/bên',''],['Plank','3 hiệp × 40–60s','']]}
+];
+const WARM='Khởi động 5 phút: xoay khớp, nhảy nhẹ, 10 squat không tải.';
+
+let S=load();
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s)return s}catch(e){}return{p:{h:170,a:22,s:'m',g:60},w:[],c:{},wt:{},wo:{},rem:false,nt:{}}}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+const dkey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const tk=()=>dkey();
+const last=()=>S.w.length?S.w[S.w.length-1].w:null;
+
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',5000)}
+function go(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id==='t-'+t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));scrollTo(0,0)}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+
+function target(){ // Mifflin-St Jeor, vận động nhẹ x1.55, +400 để tăng cân
+  const w=last()||50,{h,a,s}=S.p;const bmr=10*w+6.25*h-5*a+(s==='m'?5:-161);const tdee=bmr*1.55;return{tdee:Math.round(tdee),goal:Math.round(tdee+400)}
+}
+function bmi(){const w=last();return w?w/Math.pow(S.p.h/100,2):null}
+
+function renderHome(){
+  const hr=new Date().getHours();$('hello').textContent=(hr<11?'Chào buổi sáng':hr<18?'Chào buổi chiều':'Chào buổi tối')+' 👋';
+  $('today').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
+  const c=last(),b=bmi();
+  $('sCur').textContent=c?c.toFixed(1):'--';$('sGoal').textContent=S.p.g;$('sBmi').textContent=b?b.toFixed(1):'--';
+  if(c&&S.w.length){const st=S.w[0].w,tot=S.p.g-st,pct=tot>0?Math.max(0,Math.min(100,(c-st)/tot*100)):0;
+    $('prog').style.width=pct+'%';$('progPct').textContent=Math.round(pct)+'%';
+    $('progTxt').textContent=c>=S.p.g?'Đã đạt mục tiêu 🎉':'Còn '+(S.p.g-c).toFixed(1)+' kg nữa';
+  }else{$('prog').style.width='0';$('progPct').textContent='';$('progTxt').textContent='Hãy nhập cân nặng đầu tiên'}
+  const ck=S.c[tk()]||{};let kc=0;
+  $('homeMeals').innerHTML=MEALS.map(m=>{if(ck[m.id])kc+=m.k;return mealRow(m,ck[m.id])}).join('');
+  $('kcalTag').textContent=kc+' / '+target().goal+' kcal';
+  const w=(S.wt[tk()]||0);$('waterTxt').textContent=w+' / 8 ly (mục tiêu 2 lít)';
+  const p=PLAN[new Date().getDay()];
+  $('homeWorkout').textContent=p.n+': '+p.title+(S.wo[tk()]?' ✅ đã xong':'');
+}
+function mealRow(m,done){return `<label class="meal ${done?'done':''}"><input type="checkbox" ${done?'checked':''} onchange="checkMeal('${m.id}',this.checked)"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d} · ${m.k} kcal</small></span></label>`}
+function checkMeal(id,v){const k=tk();S.c[k]=S.c[k]||{};S.c[k][id]=v;save();renderHome()}
+function water(n){const k=tk();S.wt[k]=Math.max(0,(S.wt[k]||0)+n);save();renderHome()}
+
+function addWeight(){const v=parseFloat($('wIn').value);if(!v||v<20||v>250)return toast('Nhập cân nặng hợp lệ nhé');
+  const k=tk(),i=S.w.findIndex(x=>x.d===k);if(i>=0)S.w[i].w=v;else S.w.push({d:k,w:v});S.w.sort((a,b)=>a.d.localeCompare(b.d));
+  $('wIn').value='';save();renderAll();toast('Đã lưu '+v+' kg')}
+function delWeight(d){S.w=S.w.filter(x=>x.d!==d);save();renderAll()}
+function saveProfile(){S.p={h:+$('pH').value||170,a:+$('pA').value||22,s:$('pS').value,g:+$('pG').value||60};save();renderAll();toast('Đã lưu thông tin')}
+function demoData(){const n=new Date();S.w=[];let w=50;for(let i=28;i>=0;i-=2){const d=new Date(n);d.setDate(n.getDate()-i);w+=0.15+(Math.random()-.4)*0.2;S.w.push({d:dkey(d),w:Math.round(w*10)/10})}S.p.g=58;save();renderAll();toast('Đã nạp dữ liệu mẫu')}
+function resetAll(){if(confirm('Xóa toàn bộ dữ liệu?')){localStorage.removeItem(KEY);S=load();renderAll()}}
+
+function renderWeight(){
+  $('pH').value=S.p.h;$('pA').value=S.p.a;$('pS').value=S.p.s;$('pG').value=S.p.g;
+  const t=target();$('kcalNote').innerHTML=`Ước tính bạn tiêu hao ~<b>${t.tdee}</b> kcal/ngày. Để tăng khoảng 0.25–0.5 kg/tuần, ăn khoảng <b>${t.goal}</b> kcal/ngày. Đây chỉ là ước tính, hãy điều chỉnh theo cân nặng thực tế sau 2 tuần.`;
+  $('hist').innerHTML=S.w.length?[...S.w].reverse().slice(0,10).map((x,i,a)=>{const prev=S.w[S.w.length-2-i];const df=prev?x.w-prev.w:0;
+    return `<div class="hist"><span>${x.d.split('-').reverse().join('/')}</span><span><b>${x.w.toFixed(1)} kg</b> <small style="color:${df>=0?'var(--pri)':'var(--bad)'}">${prev?(df>=0?'+':'')+df.toFixed(1):''}</small> <button class="ghost sm" onclick="delWeight('${x.d}')">xóa</button></span></div>`}).join(''):'<p class="sub">Chưa có dữ liệu.</p>';
+  // chart
+  const W=600,H=220,pad=34;const pts=S.w.slice(-30);
+  if(pts.length<2){$('chart').innerHTML='<p class="sub">Cần ít nhất 2 lần cân để vẽ biểu đồ.</p>';$('chartNote').textContent='';return}
+  const vals=pts.map(p=>p.w).concat(S.p.g);const mn=Math.floor(Math.min(...vals)-1),mx=Math.ceil(Math.max(...vals)+1);
+  const x=i=>pad+i*(W-pad*1.5)/(pts.length-1),y=v=>H-pad-(v-mn)/(mx-mn)*(H-pad*1.6);
+  let g='';for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;g+=`<line x1="${pad}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="4" y="${y(v)+4}" font-size="11" fill="var(--mut)">${v.toFixed(0)}</text>`}
+  const path=pts.map((p,i)=>(i?'L':'M')+x(i)+' '+y(p.w)).join(' ');
+  $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<line x1="${pad}" x2="${W-8}" y1="${y(S.p.g)}" y2="${y(S.p.g)}" stroke="var(--acc)" stroke-dasharray="6 4"/><text x="${W-8}" y="${y(S.p.g)-5}" text-anchor="end" font-size="11" fill="var(--acc)">Mục tiêu ${S.p.g}kg</text><path d="${path}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linejoin="round"/>${pts.map((p,i)=>`<circle cx="${x(i)}" cy="${y(p.w)}" r="4" fill="var(--pri)"/>`).join('')}<text x="${pad}" y="${H-8}" font-size="11" fill="var(--mut)">${pts[0].d.slice(5).split('-').reverse().join('/')}</text><text x="${W-8}" y="${H-8}" text-anchor="end" font-size="11" fill="var(--mut)">${pts[pts.length-1].d.slice(5).split('-').reverse().join('/')}</text></svg>`;
+  const d=pts[pts.length-1].w-pts[0].w;$('chartNote').textContent=`Thay đổi trong ${pts.length} lần cân gần nhất: ${d>=0?'+':''}${d.toFixed(1)} kg`;
+}
+
+function renderMeal(){
+  $('mealList').innerHTML=MEALS.map(m=>`<div class="meal"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d}</small></span><span class="tag">${m.k} kcal</span></div>`).join('');
+  $('remBtn').textContent=S.rem?'Tắt':'Bật';$('remBtn').className=S.rem?'ghost':'';
+}
+async function toggleRemind(){
+  if(!S.rem){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();S.rem=true;toast('Đã bật nhắc ăn')}else S.rem=false;
+  save();renderMeal()}
+function checkReminders(){
+  if(!S.rem)return;const n=new Date(),hm=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),k=tk();
+  MEALS.forEach(m=>{if(m.t===hm&&!(S.nt[k]||{})[m.id]&&!(S.c[k]||{})[m.id]){S.nt[k]=S.nt[k]||{};S.nt[k][m.id]=1;save();
+    const msg=`Đến giờ ${m.n.toLowerCase()}: ${m.d}`;toast('🍽️ '+msg);
+    if('Notification' in window&&Notification.permission==='granted')new Notification('Giờ ăn rồi!',{body:msg})}})}
+setInterval(checkReminders,20000);
+
+let selDay=new Date().getDay();
+function renderWorkout(){
+  const order=[1,2,3,4,5,6,0];
+  $('week').innerHTML=order.map(i=>`<button class="${i===selDay?'on':''} ${PLAN[i].rest?'rest':''}" onclick="selDay=${i};renderWorkout()">${PLAN[i].s}</button>`).join('');
+  const p=PLAN[selDay];$('wTitle').textContent=p.n+' · '+p.title;$('wDesc').textContent=p.desc+(p.rest?'':' '+WARM);
+  $('exList').innerHTML=p.ex.map(e=>`<div class="ex"><b>${e[0]}</b><span class="tag">${e[1]}</span>${e[2]?`<div class="sub" style="margin:2px 0 0">${e[2]}</div>`:''}</div>`).join('');
+  $('doneBtn').style.display=selDay===new Date().getDay()?'block':'none';
+  $('doneBtn').textContent=S.wo[tk()]?'✅ Hôm nay đã tập xong':'✅ Hoàn thành buổi tập';
+}
+function doneWorkout(){S.wo[tk()]=!S.wo[tk()];save();renderAll();if(S.wo[tk()])toast('Tuyệt vời, giỏi lắm! 💪')}
+
+let tid;function startTimer(s){clearInterval(tid);let r=s;$('timer').textContent=r;tid=setInterval(()=>{r--;$('timer').textContent=r;if(r<=0){clearInterval(tid);$('timer').textContent='Tập tiếp!';toast('Hết giờ nghỉ, vào hiệp tiếp theo!');try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}},1000)}
+
+function renderAll(){renderHome();renderWeight();renderMeal();renderWorkout()}
+renderAll();
+</script>
+</body>
+</html>
