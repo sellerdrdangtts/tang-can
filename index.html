@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Tăng Cân Khỏe</title>
 <style>
-:root{--bg:#f6f7f4;--card:#fff;--ink:#1f2a24;--mut:#6b776f;--pri:#2f9e6b;--pri2:#e6f5ed;--acc:#f59f00;--line:#e4e8e2;--bad:#e03131}
-@media(prefers-color-scheme:dark){:root{--bg:#121714;--card:#1b231e;--ink:#eaf1ec;--mut:#93a39a;--pri:#4cc38a;--pri2:#1f3329;--line:#2a352e}}
+:root{--bg:#f6f7f4;--card:#fff;--ink:#1f2a24;--mut:#6b776f;--pri:#2f9e6b;--pri2:#e6f5ed;--acc:#f59f00;--line:#e4e8e2;--bad:#e03131;--water:#1c7ed6}
+@media(prefers-color-scheme:dark){:root{--bg:#121714;--card:#1b231e;--ink:#eaf1ec;--mut:#93a39a;--pri:#4cc38a;--pri2:#1f3329;--line:#2a352e;--water:#4dabf7}}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:84px}
 .wrap{max-width:720px;margin:0 auto;padding:16px}
@@ -18,6 +18,7 @@ h1{font-size:22px;margin:4px 0 2px}h2{font-size:17px;margin:0 0 10px}
 .stat{background:var(--pri2);border-radius:12px;padding:10px;text-align:center}
 .stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--mut)}
 .bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .4s}
+.bar.w i{background:var(--water)}
 button,input,select{font:inherit;color:var(--ink)}
 button{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
 button.ghost{background:transparent;color:var(--pri);border:1px solid var(--pri)}
@@ -26,17 +27,16 @@ input,select{background:var(--bg);border:1px solid var(--line);border-radius:10p
 label{font-size:13px;color:var(--mut);display:block}
 .f{flex:1;min-width:100px}
 nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center}
-nav button{flex:1;max-width:180px;background:none;color:var(--mut);border-radius:0;padding:10px 4px;font-size:12px}
+nav button{flex:1;max-width:150px;background:none;color:var(--mut);border-radius:0;padding:10px 2px;font-size:11px}
 nav button span{display:block;font-size:20px}nav button.on{color:var(--pri);font-weight:600}
 .tab{display:none}.tab.on{display:block}
 .meal{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .meal:first-of-type{border-top:0}
-.meal input[type=checkbox]{width:24px;height:24px;accent-color:var(--pri)}
+.meal input[type=checkbox]{width:24px;height:24px;accent-color:var(--pri);flex:none}
 .meal .t{font-weight:600;min-width:52px;color:var(--pri)}
 .meal.done .d{text-decoration:line-through;color:var(--mut)}
 .d small{display:block;color:var(--mut)}
-.ex{padding:12px 0;border-top:1px solid var(--line)}.ex:first-of-type{border-top:0}
-.tag{display:inline-block;background:var(--pri2);color:var(--pri);border-radius:20px;padding:1px 10px;font-size:12px;margin-left:6px}
+.tag{display:inline-block;background:var(--pri2);color:var(--pri);border-radius:20px;padding:1px 10px;font-size:12px;margin-left:6px;white-space:nowrap}
 .week{display:flex;gap:6px;margin-bottom:12px}
 .week button{flex:1;background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:8px 0;font-size:13px}
 .week button.on{background:var(--pri);color:#fff;border-color:var(--pri)}.week button.rest{opacity:.6}
@@ -45,6 +45,25 @@ nav button span{display:block;font-size:20px}nav button.on{color:var(--pri);font
 svg{width:100%;height:auto;display:block}
 .hist{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
 .note{font-size:13px;color:var(--mut);background:var(--bg);border-radius:10px;padding:10px;margin-top:10px}
+.note a{color:var(--pri)}
+/* kcal table */
+.pace{display:block;border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;color:var(--ink);font-size:15px}
+.pace.on{border-color:var(--pri);background:var(--pri2)}
+.pace .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.pace b{font-size:18px}.pace small{display:block;color:var(--mut);font-size:13px}
+/* water */
+.cups{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px;margin-top:12px}
+.cup{background:var(--bg);border:2px solid var(--line);color:var(--ink);border-radius:12px;padding:8px 2px;text-align:center;line-height:1.2}
+.cup span{display:block;font-size:20px}.cup small{font-size:12px;color:var(--mut)}
+.cup.on{background:var(--water);border-color:var(--water);color:#fff}.cup.on small{color:#fff}
+.cup.late{border-color:var(--acc)}
+/* workout modules */
+.mod{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
+.mod.done{opacity:.6}
+.mod .hd{display:flex;gap:10px;align-items:center;justify-content:space-between}
+.mod ul{margin:8px 0 8px 18px;padding:0;font-size:14px}
+.mod li{margin-bottom:3px}
+.mod .tip{font-size:13px;color:var(--mut)}
 </style>
 </head>
 <body>
@@ -70,11 +89,12 @@ svg{width:100%;height:auto;display:block}
   <div class="card">
     <div class="row" style="justify-content:space-between">
       <div><h2 style="margin:0">💧 Nước uống</h2><small class="sub" id="waterTxt"></small></div>
-      <div class="row"><button class="ghost sm" onclick="water(-1)">−</button><button class="sm" onclick="water(1)">+ 1 ly</button></div>
+      <div class="row"><button class="ghost sm" onclick="go('water')">Bảng nước</button><button class="sm" onclick="quickCup()">+ 1 cốc</button></div>
     </div>
+    <div class="bar w" style="margin-top:10px"><i id="homeWBar"></i></div>
   </div>
   <div class="card">
-    <h2>💪 Bài tập hôm nay</h2>
+    <h2>💪 Tập luyện hôm nay</h2>
     <p id="homeWorkout" class="sub"></p>
     <button onclick="go('workout')">Xem bài tập</button>
   </div>
@@ -99,42 +119,95 @@ svg{width:100%;height:auto;display:block}
       <div class="f"><label>Giới tính</label><select id="pS"><option value="m">Nam</option><option value="f">Nữ</option></select></div>
       <div class="f"><label>Mục tiêu (kg)</label><input id="pG" type="number" step="0.5"></div>
     </div>
+    <div style="margin-top:10px"><label>Mức vận động hằng ngày</label>
+      <select id="pAct"><option value="1.2">Ngồi nhiều, ít vận động (×1.2)</option><option value="1.375">Nhẹ: tập 1–3 buổi/tuần (×1.375)</option><option value="1.55">Vừa: tập 3–5 buổi/tuần (×1.55)</option></select></div>
     <div class="row" style="margin-top:10px"><button onclick="saveProfile()">Lưu thông tin</button><button class="ghost" onclick="demoData()">Nạp dữ liệu mẫu</button><button class="ghost" onclick="resetAll()">Xóa hết</button></div>
-    <div class="note" id="kcalNote"></div>
   </div>
 </section>
 
 <!-- ĂN UỐNG -->
 <section class="tab" id="t-meal">
-  <h1>Lịch ăn &amp; nhắc nhở</h1><p class="sub">Người gầy cần ăn 5–6 bữa nhỏ, đều đặn, dư khoảng 300–500 kcal/ngày.</p>
+  <h1>Ăn uống &amp; kcal bổ sung</h1><p class="sub">Chọn tốc độ tăng cân. Bảng tính theo cân nặng hiện tại của bạn.</p>
+  <div class="card">
+    <h2>Mốc kcal mỗi ngày</h2>
+    <div id="paces"></div>
+    <div class="note" id="kcalNote"></div>
+  </div>
+  <div class="card">
+    <h2>Đạm (protein) mỗi ngày</h2>
+    <div id="protein"></div>
+    <div class="note">Chia đều đạm vào các bữa (khoảng cách 3–4 giờ) theo ISSN. Đạm từ trứng, sữa, thịt, cá, đậu phụ.</div>
+  </div>
   <div class="card">
     <div class="row" style="justify-content:space-between">
-      <div><b>🔔 Nhắc đúng giờ</b><div class="sub" style="margin:0">Cần để tab mở. Bấm bật để cho phép thông báo.</div></div>
+      <div><b>🔔 Nhắc đúng giờ ăn</b><div class="sub" style="margin:0">Cần để tab mở. Bấm bật để cho phép thông báo.</div></div>
       <button id="remBtn" onclick="toggleRemind()">Bật</button>
     </div>
   </div>
-  <div class="card"><h2>Thực đơn mẫu</h2><div id="mealList"></div>
-    <div class="note">Mẹo: thêm 1 thìa dầu ô liu / bơ đậu phộng, ăn thêm sữa nguyên kem, chuối, yến mạch, khoai lang để dễ tăng calo mà không bị ngán.</div>
+  <div class="card"><h2>Thực đơn 6 bữa (kcal theo mốc đã chọn)</h2><div id="mealList"></div>
+    <div class="note">Mẹo: thêm 1 thìa dầu ô liu hoặc bơ đậu phộng, uống sữa nguyên kem, ăn chuối, yến mạch, khoai lang để thêm calo mà không bị ngán. Khẩu phần ghi là gợi ý, hãy điều chỉnh để tổng kcal gần với mốc.</div>
+  </div>
+  <div class="card"><h2>Cơ sở khuyến nghị</h2>
+    <div class="note" style="margin-top:0">
+      • NHS Anh: người lớn tăng cân dần bằng cách thêm khoảng 300–500 kcal/ngày, kết hợp tập sức mạnh. <a href="https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/healthy-ways-to-gain-weight/" target="_blank" rel="noopener">NHS</a><br>
+      • Mốc nhẹ +250 kcal lấy từ các hướng dẫn tăng cơ thông dụng (khoảng 250–500 kcal), chưa phải nguồn y khoa chính thức.<br>
+      • Đạm 1.4–2.0 g/kg/ngày: ISSN. <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener">ISSN Position Stand</a><br>
+      • Công thức Mifflin-St Jeor × hệ số vận động chỉ là ước tính, có thể lệch 10–15%. Hãy cân đều và chỉnh mốc sau 2 tuần nếu không tăng như dự kiến.<br>
+      • Quy đổi ~7700 kcal ≈ 1 kg là ước tính thông dụng; thực tế còn phụ thuộc cơ thể.<br>
+      • Nếu BMI dưới 16, sút cân không rõ lý do hoặc chán ăn kéo dài, hãy đi khám.
+    </div>
+  </div>
+</section>
+
+<!-- NƯỚC -->
+<section class="tab" id="t-water">
+  <h1>Bảng nước uống</h1><p class="sub">Mỗi ô là 1 cốc 100 ml. Uống xong bấm vào ô để tick.</p>
+  <div class="card">
+    <div class="grid">
+      <div class="stat"><b id="wCups">--</b><span>Cốc cần uống</span></div>
+      <div class="stat"><b id="wMl">--</b><span>ml / ngày</span></div>
+      <div class="stat"><b id="wDone">--</b><span>Đã uống</span></div>
+    </div>
+    <div class="bar w" style="margin-top:14px"><i id="wBar"></i></div>
+    <p class="sub" id="wStatus" style="margin:8px 0 0"></p>
+  </div>
+  <div class="card">
+    <h2>Lịch uống 07:30 → 22:00</h2>
+    <div class="cups" id="cups"></div>
+    <div class="row" style="justify-content:space-between;margin-top:14px">
+      <div><b>🔔 Nhắc uống nước</b><div class="sub" style="margin:0">Thông báo từng cốc đúng giờ (cần để tab mở).</div></div>
+      <button id="remWBtn" onclick="toggleRemindW()">Bật</button>
+    </div>
+  </div>
+  <div class="card"><h2>Cách tính</h2>
+    <div class="note" style="margin-top:0" id="wNote"></div>
   </div>
 </section>
 
 <!-- TẬP LUYỆN -->
 <section class="tab" id="t-workout">
-  <h1>Tập tại nhà</h1><p class="sub">Không cần dụng cụ. Mục tiêu là tăng cơ: tăng dần số rep mỗi tuần, không cần tập quá lâu.</p>
+  <h1>Tập nhẹ tại nhà</h1><p class="sub">Mỗi bài 5–10 phút, ghép 2–3 bài mỗi buổi. Không cần dụng cụ.</p>
   <div class="week" id="week"></div>
   <div class="card">
     <h2 id="wTitle"></h2><p class="sub" id="wDesc"></p>
-    <div id="exList"></div>
-    <button id="doneBtn" style="margin-top:12px;width:100%" onclick="doneWorkout()">✅ Hoàn thành buổi tập</button>
+    <div id="modList"></div>
   </div>
   <div class="card">
-    <h2>⏱️ Hẹn giờ nghỉ giữa hiệp</h2>
-    <div class="timer" id="timer">60</div>
+    <h2>⏱️ Đồng hồ</h2>
+    <p class="sub" id="timerLbl" style="text-align:center;margin:0 0 4px">Nghỉ giữa hiệp</p>
+    <div class="timer" id="timer">1:00</div>
     <div class="row" style="justify-content:center;margin-top:10px">
-      <button class="ghost sm" onclick="startTimer(45)">45s</button><button class="ghost sm" onclick="startTimer(60)">60s</button><button class="ghost sm" onclick="startTimer(90)">90s</button>
+      <button class="ghost sm" onclick="startTimer(45,'Nghỉ giữa hiệp')">45s</button><button class="ghost sm" onclick="startTimer(60,'Nghỉ giữa hiệp')">60s</button><button class="ghost sm" onclick="startTimer(90,'Nghỉ giữa hiệp')">90s</button><button class="ghost sm" onclick="stopTimer()">Dừng</button>
     </div>
   </div>
-  <div class="note">Ngủ đủ 7–8 tiếng và ăn đủ đạm (khoảng 1.6–2 g/kg cân nặng) quan trọng ngang việc tập. Nếu đau nhói hoặc chóng mặt thì dừng lại.</div>
+  <div class="card"><h2>Lưu ý</h2>
+    <div class="note" style="margin-top:0">
+      • Tăng tiến chậm: khi làm đủ số lần ở mọi hiệp một cách dễ dàng, buổi sau thêm 1–2 lần hoặc hạ chậm hơn. Sau 2–3 tuần mới thêm hiệp.<br>
+      • Nên có ít nhất 2 ngày/tuần tập tăng cơ (WHO 2020 khuyến nghị vận động tăng cơ đều đặn cho người lớn). Lịch trên có 4 ngày.<br>
+      • Dừng lại nếu đau nhói, chóng mặt, tức ngực. Có bệnh tim, khớp, huyết áp thì hỏi bác sĩ trước.<br>
+      • Ngủ 7–8 tiếng và ăn đủ kcal mới tăng cơ được.
+    </div>
+  </div>
 </section>
 
 </div>
@@ -143,47 +216,108 @@ svg{width:100%;height:auto;display:block}
   <button data-t="home" class="on"><span>🏠</span>Hôm nay</button>
   <button data-t="weight"><span>⚖️</span>Cân nặng</button>
   <button data-t="meal"><span>🍽️</span>Ăn uống</button>
+  <button data-t="water"><span>💧</span>Nước</button>
   <button data-t="workout"><span>💪</span>Tập luyện</button>
 </nav>
 
 <script>
 const $=id=>document.getElementById(id);
 const KEY='tangcan_v1';
+// share = tỉ lệ kcal ngày của từng bữa (tổng = 1)
 const MEALS=[
- {id:'m1',t:'06:30',n:'Bữa sáng',d:'3 trứng + 2 lát bánh mì bơ + 1 ly sữa',k:650},
- {id:'m2',t:'09:30',n:'Phụ sáng',d:'1 chuối + 2 thìa bơ đậu phộng',k:300},
- {id:'m3',t:'12:00',n:'Bữa trưa',d:'2 chén cơm + 150g thịt/cá + rau + 1 thìa dầu',k:800},
- {id:'m4',t:'15:30',n:'Phụ chiều',d:'Sữa chua + 1 nắm hạt (hạnh nhân, óc chó)',k:300},
- {id:'m5',t:'18:30',n:'Bữa tối',d:'2 chén cơm + ức gà/cá + canh + khoai lang',k:750},
- {id:'m6',t:'21:30',n:'Trước ngủ',d:'1 ly sữa nguyên kem + yến mạch hoặc bánh mì',k:300}
+ {id:'m1',t:'06:30',n:'Bữa sáng',d:'3 trứng + 2 lát bánh mì bơ + 1 ly sữa',share:.20},
+ {id:'m2',t:'09:30',n:'Phụ sáng',d:'1 chuối + 2 thìa bơ đậu phộng',share:.10},
+ {id:'m3',t:'12:00',n:'Bữa trưa',d:'2 chén cơm + 150g thịt/cá + rau + 1 thìa dầu',share:.25},
+ {id:'m4',t:'15:30',n:'Phụ chiều',d:'Sữa chua + 1 nắm hạt (hạnh nhân, óc chó)',share:.10},
+ {id:'m5',t:'18:30',n:'Bữa tối',d:'2 chén cơm + ức gà/cá + canh + khoai lang',share:.25},
+ {id:'m6',t:'21:30',n:'Trước ngủ',d:'1 ly sữa nguyên kem + yến mạch hoặc bánh mì',share:.10}
 ];
+const PACES=[
+ {v:250,n:'Nhẹ nhàng',d:'Ít mỡ nhất, hợp người mới tập hoặc ăn ít'},
+ {v:350,n:'Chuẩn (khuyên dùng)',d:'Cân bằng, nằm trong khoảng NHS 300–500'},
+ {v:500,n:'Nhanh',d:'Mức tối đa NHS; tăng nhanh hơn nhưng dễ kèm mỡ'}
+];
+const MODS={
+ warm:{n:'Khởi động & mở khớp',min:5,lv:'Rất nhẹ',steps:['Xoay cổ, vai: 10 vòng mỗi chiều','Xoay hông, gối, cổ chân: 10 vòng mỗi bên','Đi bộ tại chỗ nâng gối cao: 1 phút','Squat không tải, chậm: 8 lần','Hít thở sâu 5 nhịp']},
+ push:{n:'Hít đất nhẹ (ngực, tay sau)',min:8,lv:'Nhẹ',steps:['Hít đất tường hoặc quỳ gối: 3 hiệp × 6–10 lần, hạ xuống 3 giây','Nghỉ 60 giây giữa hiệp','Hít đất tay hẹp trên đầu gối: 2 hiệp × 5–8 lần','Giãn ngực ở khung cửa: 2 × 20 giây'],tip:'Chưa làm nổi 6 lần thì tập đẩy tường trước, rồi hạ dần xuống mặt bàn, sàn nhà.'},
+ shoulder:{n:'Vai & tay sau',min:7,lv:'Nhẹ',steps:['Nâng chai nước 1–1.5 lít sang ngang: 3 × 10','Đẩy chai nước qua đầu: 3 × 10','Chống tay ghế, gối co (dips): 2 × 8','Nghỉ 45–60 giây giữa hiệp'],tip:'Dùng ghế chắc, đặt sát tường.'},
+ legs:{n:'Squat ghế & bước chân',min:8,lv:'Nhẹ',steps:['Squat chạm ghế rồi đứng lên: 3 × 10–12','Bước lunge tại chỗ, bám ghế nếu cần: 2 × 8 mỗi chân','Nhón gót: 2 × 15','Nghỉ 60 giây giữa hiệp'],tip:'Gối hướng theo mũi chân, lưng thẳng.'},
+ glute:{n:'Mông & lưng dưới',min:7,lv:'Rất nhẹ',steps:['Glute bridge: 3 × 12, siết mông 2 giây','Bird-dog: 2 × 8 mỗi bên','Superman nằm sấp, nâng nhẹ: 2 × 8, giữ 2 giây','Tư thế em bé nghỉ 30 giây']},
+ back:{n:'Kéo lưng với balo',min:8,lv:'Nhẹ',steps:['Cúi người kéo balo (nhét sách khoảng 3–5 kg): 3 × 10','Nằm sấp bóp bả vai hình chữ W: 2 × 10','Nghỉ 60 giây giữa hiệp'],tip:'Bóp bả vai về sau khi kéo, không giật.'},
+ core:{n:'Bụng nhẹ (plank, dead bug)',min:7,lv:'Nhẹ',steps:['Plank trên đầu gối: 3 × 20–30 giây','Dead bug: 2 × 8 mỗi bên','Gập bụng nhẹ: 2 × 10','Nghỉ 45 giây giữa hiệp']},
+ full:{n:'Vòng tuần hoàn toàn thân nhẹ',min:10,lv:'Vừa',steps:['Squat 10 → hít đất quỳ 6 → glute bridge 10 → plank gối 20 giây','Nghỉ 60 giây rồi lặp lại 2–3 vòng']},
+ walk:{n:'Đi bộ nhẹ',min:10,lv:'Rất nhẹ',steps:['Đi bộ trong nhà hoặc ngoài trời ở nhịp vẫn nói chuyện được','Thở đều qua mũi, vai thả lỏng']},
+ stretch:{n:'Giãn cơ & thư giãn',min:5,lv:'Rất nhẹ',steps:['Giãn đùi trước, đùi sau: 30 giây mỗi bên','Giãn ngực, vai: 30 giây mỗi bên','Tư thế em bé: 1 phút','Hít bụng sâu 10 nhịp']}
+};
 const PLAN=[ // 0 = Chủ nhật
- {n:'Chủ nhật',s:'CN',rest:true,title:'Nghỉ ngơi',desc:'Đi bộ nhẹ 20–30 phút, giãn cơ. Cơ lớn lên khi nghỉ.',ex:[['Đi bộ nhẹ','20–30 phút','Thở đều, không cần nhanh'],['Giãn cơ toàn thân','5–10 phút','Giữ mỗi tư thế 20–30 giây']]},
- {n:'Thứ 2',s:'T2',title:'Thân trên',desc:'Ngực, vai, tay sau.',ex:[['Hít đất (quỳ gối nếu khó)','4 hiệp × 8–12','Hạ chậm 3 giây, đẩy lên dứt khoát'],['Hít đất kim cương','3 hiệp × 6–10','Tay sau (triceps)'],['Dips ghế','3 hiệp × 10–12','Dùng 2 ghế chắc chắn hoặc mép giường'],['Pike push-up','3 hiệp × 6–10','Tập vai']]},
- {n:'Thứ 3',s:'T3',rest:true,title:'Nghỉ / đi bộ',desc:'Đi bộ nhẹ, giãn cơ, ăn đủ bữa.',ex:[['Đi bộ nhẹ','20 phút',''],['Giãn cơ','5–10 phút','']]},
- {n:'Thứ 4',s:'T4',title:'Chân & mông',desc:'Nhóm cơ lớn nhất, tăng cân hiệu quả nhất.',ex:[['Squat','4 hiệp × 12–15','Lưng thẳng, gối theo hướng mũi chân'],['Lunge (bước chân)','3 hiệp × 10/bên','Cầm chai nước 1.5L mỗi tay cho nặng'],['Glute bridge','3 hiệp × 15','Siết mông 2 giây ở trên'],['Nhón gót','3 hiệp × 20','Bắp chân']]},
- {n:'Thứ 5',s:'T5',rest:true,title:'Nghỉ / đi bộ',desc:'Phục hồi. Không bỏ bữa phụ.',ex:[['Đi bộ nhẹ','20 phút',''],['Giãn cơ','5–10 phút','']]},
- {n:'Thứ 6',s:'T6',title:'Lưng & bụng',desc:'Dùng balo nhét sách làm tạ.',ex:[['Superman','3 hiệp × 12','Nâng tay chân cùng lúc, giữ 2 giây'],['Balo row (cúi người kéo balo)','4 hiệp × 10–12','Bóp bả vai khi kéo'],['Plank','3 hiệp × 30–45s','Người thẳng như tấm ván'],['Gập bụng','3 hiệp × 15','Không kéo cổ']]},
- {n:'Thứ 7',s:'T7',title:'Toàn thân',desc:'Kết hợp, tăng độ khó so với tuần trước.',ex:[['Squat có balo','4 hiệp × 12','Ôm balo trước ngực'],['Hít đất','3 hiệp × max','Ghi lại số rep để vượt tuần sau'],['Lunge đi bộ','3 hiệp × 10/bên',''],['Plank','3 hiệp × 40–60s','']]}
+ {n:'Chủ nhật',s:'CN',rest:true,title:'Nghỉ nhẹ',desc:'Vận động rất nhẹ để cơ phục hồi.',mods:['walk','stretch']},
+ {n:'Thứ 2',s:'T2',title:'Ngực, vai, tay',desc:'Thân trên.',mods:['warm','push','shoulder']},
+ {n:'Thứ 3',s:'T3',rest:true,title:'Nghỉ nhẹ',desc:'Đi bộ và giãn cơ.',mods:['walk','stretch']},
+ {n:'Thứ 4',s:'T4',title:'Chân & mông',desc:'Nhóm cơ lớn, giúp tăng cân hiệu quả.',mods:['warm','legs','glute']},
+ {n:'Thứ 5',s:'T5',rest:true,title:'Nghỉ nhẹ',desc:'Đi bộ và giãn cơ.',mods:['walk','stretch']},
+ {n:'Thứ 6',s:'T6',title:'Lưng & bụng',desc:'Dùng balo làm tạ.',mods:['warm','back','core']},
+ {n:'Thứ 7',s:'T7',title:'Toàn thân nhẹ',desc:'Kết hợp các động tác đã học.',mods:['warm','full','stretch']}
 ];
-const WARM='Khởi động 5 phút: xoay khớp, nhảy nhẹ, 10 squat không tải.';
 
 let S=load();
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s)return s}catch(e){}return{p:{h:170,a:22,s:'m',g:60},w:[],c:{},wt:{},wo:{},rem:false,nt:{}}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s){s.p=Object.assign({h:170,a:22,s:'m',g:60,pace:350,act:1.375},s.p);s.cup=s.cup||{};s.wo=s.wo||{};s.c=s.c||{};s.nt=s.nt||{};s.w=s.w||[];return s}}catch(e){}
+  return{p:{h:170,a:22,s:'m',g:60,pace:350,act:1.375},w:[],c:{},cup:{},wo:{},rem:false,remW:false,nt:{}}}
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
 const dkey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const tk=()=>dkey();
 const last=()=>S.w.length?S.w[S.w.length-1].w:null;
+const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const woOf=k=>(S.wo[k]&&typeof S.wo[k]==='object')?S.wo[k]:{};
 
 function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',5000)}
 function go(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id==='t-'+t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));scrollTo(0,0)}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
 
-function target(){ // Mifflin-St Jeor, vận động nhẹ x1.55, +400 để tăng cân
-  const w=last()||50,{h,a,s}=S.p;const bmr=10*w+6.25*h-5*a+(s==='m'?5:-161);const tdee=bmr*1.55;return{tdee:Math.round(tdee),goal:Math.round(tdee+400)}
-}
+/* ---------- KCAL ---------- */
+function energy(){ // Mifflin-St Jeor × hệ số vận động
+  const w=last()||50,{h,a,s,act}=S.p;const bmr=10*w+6.25*h-5*a+(s==='m'?5:-161);return{w,bmr:Math.round(bmr),tdee:Math.round(bmr*act)}}
+function target(){const e=energy();return{tdee:e.tdee,goal:e.tdee+S.p.pace}}
+function mealKcal(m){return Math.round(m.share*target().goal/10)*10}
 function bmi(){const w=last();return w?w/Math.pow(S.p.h/100,2):null}
 
+function renderPaces(){
+  const e=energy(),cur=last();
+  $('paces').innerHTML=PACES.map(p=>{const kg=p.v*7/7700,mo=kg*4.3;
+    const eta=cur&&S.p.g>cur?Math.ceil((S.p.g-cur)/kg)+' tuần':'';
+    return `<label class="pace ${S.p.pace===p.v?'on':''}"><input type="radio" name="pace" hidden onchange="setPace(${p.v})">
+    <div class="top"><span><b>${e.tdee+p.v}</b> kcal/ngày <span class="tag">+${p.v}</span></span><span>${p.n}</span></div>
+    <small>≈ +${kg.toFixed(2)} kg/tuần, +${mo.toFixed(1)} kg/tháng${eta?' · đạt '+S.p.g+' kg sau ~'+eta:''}</small><small>${p.d}</small></label>`}).join('');
+  const pr=S.p.pace,kgw=pr*7/7700,pct=kgw/e.w*100;
+  $('kcalNote').innerHTML=`Cân nặng ${e.w} kg → chuyển hóa cơ bản ~<b>${e.bmr}</b> kcal, tiêu hao cả ngày ~<b>${e.tdee}</b> kcal. Mốc đang chọn tăng ~${pct.toFixed(2)}% cân nặng/tuần${pct>0.5?' (hơi nhanh, dễ tăng mỡ)':''}. Sau 2 tuần, nếu cân không đổi thì tăng mốc 100–150 kcal; nếu tăng quá 0.5 kg/tuần thì giảm bớt.`;
+  const lo=Math.round(e.w*1.6),hi=Math.round(e.w*2.0);
+  $('protein').innerHTML=`<div class="grid"><div class="stat"><b>${lo}–${hi} g</b><span>Đạm / ngày</span></div><div class="stat"><b>${Math.round(lo/6)}–${Math.round(hi/6)} g</b><span>Mỗi bữa (6 bữa)</span></div><div class="stat"><b>${Math.round(e.w*1.6*4)}</b><span>kcal từ đạm (tối thiểu)</span></div></div>`;
+}
+function setPace(v){S.p.pace=v;save();renderAll()}
+
+/* ---------- NƯỚC ---------- */
+// Nhu cầu nước ~35 ml/kg (Viện Dinh dưỡng, người 19–55 tuổi vận động vừa). Thức ăn cung cấp ~20% (EFSA) nên cần uống ~28 ml/kg.
+function waterPlan(){
+  const w=last()||50,total=Math.round(w*35),drink=Math.round(w*28/100)*100,n=Math.max(8,Math.round(drink/100));
+  const times=[];for(let i=0;i<n;i++)times.push(Math.round((450+i*870/(n-1))/5)*5); // 07:30 → 22:00
+  return{w,total,drink:n*100,n,times}}
+function cupsDone(){const d=S.cup[tk()]||{};return Object.keys(d).filter(k=>d[k]).length}
+function toggleCup(i){const k=tk();S.cup[k]=S.cup[k]||{};S.cup[k][i]=!S.cup[k][i];save();renderHome();renderWater()}
+function quickCup(){const wp=waterPlan(),k=tk();S.cup[k]=S.cup[k]||{};for(let i=0;i<wp.n;i++)if(!S.cup[k][i]){S.cup[k][i]=true;break}save();renderHome();renderWater()}
+function renderWater(){
+  const wp=waterPlan(),d=S.cup[tk()]||{},done=cupsDone(),n=new Date(),nowMin=n.getHours()*60+n.getMinutes();
+  $('wCups').textContent=wp.n;$('wMl').textContent=wp.drink;$('wDone').textContent=done*100+' ml';
+  $('wBar').style.width=Math.min(100,done/wp.n*100)+'%';
+  const due=wp.times.filter(t=>t<=nowMin).length;
+  $('wStatus').textContent=done>=wp.n?'Đã đủ nước hôm nay 🎉':(due>done?`Theo lịch, bạn nên đã uống ${due} cốc, còn thiếu ${due-done} cốc.`:'Đúng tiến độ 👍');
+  $('cups').innerHTML=wp.times.map((t,i)=>`<button class="cup ${d[i]?'on':''} ${!d[i]&&t<=nowMin?'late':''}" onclick="toggleCup(${i})"><span>${d[i]?'✓':'🥛'}</span><small>${hhmm(t)}</small></button>`).join('');
+  $('remWBtn').textContent=S.remW?'Tắt':'Bật';$('remWBtn').className=S.remW?'ghost':'';
+  $('wNote').innerHTML=`Cân nặng ${wp.w} kg × 35 ml = <b>${wp.total} ml</b> nước/ngày (Viện Dinh dưỡng, người 19–55 tuổi vận động vừa). Khoảng 20% đến từ thức ăn nên cần uống ~<b>${wp.drink} ml</b> = ${wp.n} cốc, chia đều từ 07:30 đến 22:00 (cách nhau ~${Math.round(870/(wp.n-1))} phút). Tập ra nhiều mồ hôi hoặc trời nóng thì uống thêm. Người có bệnh tim, thận cần hỏi bác sĩ. Cân nặng đổi thì số cốc tự đổi theo. Tham khảo: <a href="https://www.vinmec.com/vie/bai-viet/uong-nuoc-dung-cach-trong-dieu-tri-soi-tiet-nieu-vi" target="_blank" rel="noopener">Vinmec</a>, <a href="https://link.springer.com/doi/10.1007/s00394-015-0943-9" target="_blank" rel="noopener">EFSA qua nghiên cứu Eur J Nutr</a>.`;
+}
+async function toggleRemindW(){
+  if(!S.remW){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();S.remW=true;toast('Đã bật nhắc uống nước')}else S.remW=false;
+  save();renderWater()}
+
+/* ---------- HÔM NAY ---------- */
 function renderHome(){
   const hr=new Date().getHours();$('hello').textContent=(hr<11?'Chào buổi sáng':hr<18?'Chào buổi chiều':'Chào buổi tối')+' 👋';
   $('today').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
@@ -194,30 +328,29 @@ function renderHome(){
     $('progTxt').textContent=c>=S.p.g?'Đã đạt mục tiêu 🎉':'Còn '+(S.p.g-c).toFixed(1)+' kg nữa';
   }else{$('prog').style.width='0';$('progPct').textContent='';$('progTxt').textContent='Hãy nhập cân nặng đầu tiên'}
   const ck=S.c[tk()]||{};let kc=0;
-  $('homeMeals').innerHTML=MEALS.map(m=>{if(ck[m.id])kc+=m.k;return mealRow(m,ck[m.id])}).join('');
+  $('homeMeals').innerHTML=MEALS.map(m=>{if(ck[m.id])kc+=mealKcal(m);return mealRow(m,ck[m.id])}).join('');
   $('kcalTag').textContent=kc+' / '+target().goal+' kcal';
-  const w=(S.wt[tk()]||0);$('waterTxt').textContent=w+' / 8 ly (mục tiêu 2 lít)';
-  const p=PLAN[new Date().getDay()];
-  $('homeWorkout').textContent=p.n+': '+p.title+(S.wo[tk()]?' ✅ đã xong':'');
+  const wp=waterPlan(),done=cupsDone();
+  $('waterTxt').textContent=`${done} / ${wp.n} cốc (${done*100} / ${wp.drink} ml)`;$('homeWBar').style.width=Math.min(100,done/wp.n*100)+'%';
+  const p=PLAN[new Date().getDay()],o=woOf(tk()),nd=p.mods.filter(m=>o[m]).length,tm=p.mods.reduce((a,m)=>a+MODS[m].min,0);
+  $('homeWorkout').textContent=`${p.n}: ${p.title} · ${p.mods.length} bài, ~${tm} phút · xong ${nd}/${p.mods.length}`;
 }
-function mealRow(m,done){return `<label class="meal ${done?'done':''}"><input type="checkbox" ${done?'checked':''} onchange="checkMeal('${m.id}',this.checked)"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d} · ${m.k} kcal</small></span></label>`}
+function mealRow(m,done){return `<label class="meal ${done?'done':''}"><input type="checkbox" ${done?'checked':''} onchange="checkMeal('${m.id}',this.checked)"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d} · ${mealKcal(m)} kcal</small></span></label>`}
 function checkMeal(id,v){const k=tk();S.c[k]=S.c[k]||{};S.c[k][id]=v;save();renderHome()}
-function water(n){const k=tk();S.wt[k]=Math.max(0,(S.wt[k]||0)+n);save();renderHome()}
 
+/* ---------- CÂN NẶNG ---------- */
 function addWeight(){const v=parseFloat($('wIn').value);if(!v||v<20||v>250)return toast('Nhập cân nặng hợp lệ nhé');
   const k=tk(),i=S.w.findIndex(x=>x.d===k);if(i>=0)S.w[i].w=v;else S.w.push({d:k,w:v});S.w.sort((a,b)=>a.d.localeCompare(b.d));
   $('wIn').value='';save();renderAll();toast('Đã lưu '+v+' kg')}
 function delWeight(d){S.w=S.w.filter(x=>x.d!==d);save();renderAll()}
-function saveProfile(){S.p={h:+$('pH').value||170,a:+$('pA').value||22,s:$('pS').value,g:+$('pG').value||60};save();renderAll();toast('Đã lưu thông tin')}
+function saveProfile(){S.p=Object.assign(S.p,{h:+$('pH').value||170,a:+$('pA').value||22,s:$('pS').value,g:+$('pG').value||60,act:+$('pAct').value||1.375});save();renderAll();toast('Đã lưu thông tin')}
 function demoData(){const n=new Date();S.w=[];let w=50;for(let i=28;i>=0;i-=2){const d=new Date(n);d.setDate(n.getDate()-i);w+=0.15+(Math.random()-.4)*0.2;S.w.push({d:dkey(d),w:Math.round(w*10)/10})}S.p.g=58;save();renderAll();toast('Đã nạp dữ liệu mẫu')}
 function resetAll(){if(confirm('Xóa toàn bộ dữ liệu?')){localStorage.removeItem(KEY);S=load();renderAll()}}
 
 function renderWeight(){
-  $('pH').value=S.p.h;$('pA').value=S.p.a;$('pS').value=S.p.s;$('pG').value=S.p.g;
-  const t=target();$('kcalNote').innerHTML=`Ước tính bạn tiêu hao ~<b>${t.tdee}</b> kcal/ngày. Để tăng khoảng 0.25–0.5 kg/tuần, ăn khoảng <b>${t.goal}</b> kcal/ngày. Đây chỉ là ước tính, hãy điều chỉnh theo cân nặng thực tế sau 2 tuần.`;
-  $('hist').innerHTML=S.w.length?[...S.w].reverse().slice(0,10).map((x,i,a)=>{const prev=S.w[S.w.length-2-i];const df=prev?x.w-prev.w:0;
+  $('pH').value=S.p.h;$('pA').value=S.p.a;$('pS').value=S.p.s;$('pG').value=S.p.g;$('pAct').value=String(S.p.act);
+  $('hist').innerHTML=S.w.length?[...S.w].reverse().slice(0,10).map((x,i)=>{const prev=S.w[S.w.length-2-i];const df=prev?x.w-prev.w:0;
     return `<div class="hist"><span>${x.d.split('-').reverse().join('/')}</span><span><b>${x.w.toFixed(1)} kg</b> <small style="color:${df>=0?'var(--pri)':'var(--bad)'}">${prev?(df>=0?'+':'')+df.toFixed(1):''}</small> <button class="ghost sm" onclick="delWeight('${x.d}')">xóa</button></span></div>`}).join(''):'<p class="sub">Chưa có dữ liệu.</p>';
-  // chart
   const W=600,H=220,pad=34;const pts=S.w.slice(-30);
   if(pts.length<2){$('chart').innerHTML='<p class="sub">Cần ít nhất 2 lần cân để vẽ biểu đồ.</p>';$('chartNote').textContent='';return}
   const vals=pts.map(p=>p.w).concat(S.p.g);const mn=Math.floor(Math.min(...vals)-1),mx=Math.ceil(Math.max(...vals)+1);
@@ -228,34 +361,45 @@ function renderWeight(){
   const d=pts[pts.length-1].w-pts[0].w;$('chartNote').textContent=`Thay đổi trong ${pts.length} lần cân gần nhất: ${d>=0?'+':''}${d.toFixed(1)} kg`;
 }
 
+/* ---------- ĂN UỐNG ---------- */
 function renderMeal(){
-  $('mealList').innerHTML=MEALS.map(m=>`<div class="meal"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d}</small></span><span class="tag">${m.k} kcal</span></div>`).join('');
+  renderPaces();
+  $('mealList').innerHTML=MEALS.map(m=>`<div class="meal"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d}</small></span><span class="tag">${mealKcal(m)} kcal</span></div>`).join('');
   $('remBtn').textContent=S.rem?'Tắt':'Bật';$('remBtn').className=S.rem?'ghost':'';
 }
 async function toggleRemind(){
   if(!S.rem){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();S.rem=true;toast('Đã bật nhắc ăn')}else S.rem=false;
   save();renderMeal()}
+
+function notify(title,msg){toast(msg);if('Notification' in window&&Notification.permission==='granted')new Notification(title,{body:msg})}
 function checkReminders(){
-  if(!S.rem)return;const n=new Date(),hm=String(n.getHours()).padStart(2,'0')+':'+String(n.getMinutes()).padStart(2,'0'),k=tk();
-  MEALS.forEach(m=>{if(m.t===hm&&!(S.nt[k]||{})[m.id]&&!(S.c[k]||{})[m.id]){S.nt[k]=S.nt[k]||{};S.nt[k][m.id]=1;save();
-    const msg=`Đến giờ ${m.n.toLowerCase()}: ${m.d}`;toast('🍽️ '+msg);
-    if('Notification' in window&&Notification.permission==='granted')new Notification('Giờ ăn rồi!',{body:msg})}})}
+  const n=new Date(),nowMin=n.getHours()*60+n.getMinutes(),hm=hhmm(nowMin),k=tk();
+  S.nt[k]=S.nt[k]||{};
+  if(S.rem)MEALS.forEach(m=>{if(m.t===hm&&!S.nt[k][m.id]&&!(S.c[k]||{})[m.id]){S.nt[k][m.id]=1;save();notify('Giờ ăn rồi!',`🍽️ Đến giờ ${m.n.toLowerCase()}: ${m.d}`)}});
+  if(S.remW){const wp=waterPlan(),d=S.cup[k]||{};wp.times.forEach((t,i)=>{const id='w'+i;if(t===nowMin&&!S.nt[k][id]&&!d[i]){S.nt[k][id]=1;save();notify('Uống nước nào!',`💧 Cốc ${i+1}/${wp.n} (100 ml)`)}})}
+}
 setInterval(checkReminders,20000);
 
+/* ---------- TẬP LUYỆN ---------- */
 let selDay=new Date().getDay();
 function renderWorkout(){
   const order=[1,2,3,4,5,6,0];
   $('week').innerHTML=order.map(i=>`<button class="${i===selDay?'on':''} ${PLAN[i].rest?'rest':''}" onclick="selDay=${i};renderWorkout()">${PLAN[i].s}</button>`).join('');
-  const p=PLAN[selDay];$('wTitle').textContent=p.n+' · '+p.title;$('wDesc').textContent=p.desc+(p.rest?'':' '+WARM);
-  $('exList').innerHTML=p.ex.map(e=>`<div class="ex"><b>${e[0]}</b><span class="tag">${e[1]}</span>${e[2]?`<div class="sub" style="margin:2px 0 0">${e[2]}</div>`:''}</div>`).join('');
-  $('doneBtn').style.display=selDay===new Date().getDay()?'block':'none';
-  $('doneBtn').textContent=S.wo[tk()]?'✅ Hôm nay đã tập xong':'✅ Hoàn thành buổi tập';
+  const p=PLAN[selDay],tm=p.mods.reduce((a,m)=>a+MODS[m].min,0),isToday=selDay===new Date().getDay(),o=isToday?woOf(tk()):{};
+  $('wTitle').textContent=p.n+' · '+p.title;$('wDesc').textContent=`${p.desc} Tổng ~${tm} phút, ${p.mods.length} bài.`;
+  $('modList').innerHTML=p.mods.map(id=>{const m=MODS[id];return `<div class="mod ${o[id]?'done':''}"><div class="hd"><b>${m.n}</b><span><span class="tag">${m.min} phút</span><span class="tag">${m.lv}</span></span></div>
+    <ul>${m.steps.map(s=>`<li>${s}</li>`).join('')}</ul>${m.tip?`<div class="tip">💡 ${m.tip}</div>`:''}
+    <div class="row" style="margin-top:8px"><button class="sm" onclick="startTimer(${m.min*60},'${m.n.replace(/'/g,'')}');window.scrollTo(0,document.body.scrollHeight)">▶ Bấm giờ ${m.min}′</button>${isToday?`<button class="ghost sm" onclick="doneMod('${id}')">${o[id]?'✅ Đã xong':'Đánh dấu xong'}</button>`:''}</div></div>`}).join('');
 }
-function doneWorkout(){S.wo[tk()]=!S.wo[tk()];save();renderAll();if(S.wo[tk()])toast('Tuyệt vời, giỏi lắm! 💪')}
+function doneMod(id){const k=tk();const o=woOf(k);S.wo[k]=Object.assign({},o,{[id]:!o[id]});save();renderAll();if(S.wo[k][id])toast('Tốt lắm! 💪')}
 
-let tid;function startTimer(s){clearInterval(tid);let r=s;$('timer').textContent=r;tid=setInterval(()=>{r--;$('timer').textContent=r;if(r<=0){clearInterval(tid);$('timer').textContent='Tập tiếp!';toast('Hết giờ nghỉ, vào hiệp tiếp theo!');try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}},1000)}
+let tid;
+function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
+function startTimer(sec,label){clearInterval(tid);let r=sec;$('timerLbl').textContent=label||'';$('timer').textContent=fmt(r);
+  tid=setInterval(()=>{r--;$('timer').textContent=fmt(Math.max(r,0));if(r<=0){clearInterval(tid);$('timer').textContent='Xong!';toast('Hết giờ: '+(label||''));try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}},1000)}
+function stopTimer(){clearInterval(tid);$('timer').textContent='1:00';$('timerLbl').textContent='Nghỉ giữa hiệp'}
 
-function renderAll(){renderHome();renderWeight();renderMeal();renderWorkout()}
+function renderAll(){renderHome();renderWeight();renderMeal();renderWater();renderWorkout()}
 renderAll();
 </script>
 </body>
