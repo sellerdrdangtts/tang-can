@@ -36,14 +36,22 @@ svg{display:block}
 /* ---------- đầu trang ---------- */
 .top{position:sticky;top:0;z-index:12;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:calc(-1 * (env(safe-area-inset-top) + 16px)) -22px 6px;padding:calc(env(safe-area-inset-top) + 14px) 22px 12px;background:rgba(240,240,242,.5);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);border-bottom:1px solid rgba(255,255,255,.55);transition:box-shadow .3s,background .3s}
 .top.scrolled{box-shadow:0 8px 24px rgba(0,0,0,.08);background:rgba(248,247,242,.78)}
-.top #reload{justify-self:start}.top #avatar{justify-self:end}
+.top #reload{justify-self:start}.top #sync{justify-self:end}
 .brand{font-size:19px;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;transition:transform .3s var(--ease)}
 .top.scrolled .brand{transform:scale(.88)}
 .brand i{width:12px;height:12px;border-radius:50%;background:var(--pri);box-shadow:0 0 0 3px rgba(47,158,107,.25)}
 .ibtn{width:48px;height:48px;border-radius:50%;border:0;background:var(--paper);display:grid;place-items:center;position:relative;color:var(--ink);transition:transform .14s var(--ease),background .2s}
 .ibtn:active{transform:scale(.9)}
 .ibtn svg{width:20px;height:20px}
-.ibtn.av{background:var(--black);color:#fff;font-weight:600;font-size:16px}
+#sync .st{position:absolute;right:-1px;bottom:-1px;width:15px;height:15px;border-radius:50%;background:#fff;border:2.5px solid var(--bg)}
+#sync .st.ok{background:var(--pri)}#sync .st.err,#sync .st.auth{background:var(--acc)}#sync .st.busy{background:var(--water);animation:pulse 1s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.3}}
+.syncbar{margin:8px 0 0;background:rgba(245,159,0,.18);border-radius:18px;padding:10px 14px;font-size:13px;font-weight:500;cursor:pointer}
+.menuBg{position:fixed;inset:0;z-index:40;display:none}.menuBg.on{display:block}
+.menu{position:absolute;top:calc(env(safe-area-inset-top) + 70px);right:16px;width:min(280px,calc(100% - 32px));background:rgba(20,20,22,.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);color:#fff;border-radius:26px;padding:8px;box-shadow:0 16px 40px rgba(0,0,0,.3);animation:rise .4s var(--ease)}
+.menu .mt2{padding:10px 14px 8px;font-size:12px;color:#a6a6ab;border-bottom:1px solid rgba(255,255,255,.1);margin-bottom:4px}
+.menu button{display:block;width:100%;text-align:left;background:none;border:0;color:#fff;padding:13px 14px;border-radius:18px;font-size:14px;font-weight:500}
+.menu button:active{background:rgba(255,255,255,.14)}
 .ibtn.spin svg{animation:spin .45s linear}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -223,8 +231,9 @@ body{--dir:0}
   <header class="top" id="top">
     <button class="ibtn" id="reload" aria-label="Tải lại"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
     <div class="brand"><i></i>Tăng Cân Khỏe</div>
-    <button class="ibtn av" id="avatar" aria-label="Thông tin cá nhân">K</button>
+    <button class="ibtn" id="sync" aria-label="Đồng bộ Google"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 18a4 4 0 01-.6-7.95A6 6 0 0118 9.5 4.25 4.25 0 0117.5 18H7z"/></svg><span class="st local"></span></button>
   </header>
+  <div class="syncbar" id="syncbar" style="display:none"></div>
 
   <main id="main">
   <!-- HÔM NAY -->
@@ -364,6 +373,7 @@ body{--dir:0}
   </main>
 </div>
 
+<div class="menuBg" id="menuBg"><div class="menu" id="menu"></div></div>
 <div class="veil"></div>
 <nav class="dock" id="dock">
   <div id="pill"></div>
@@ -374,6 +384,7 @@ body{--dir:0}
   <button class="nav" data-t="workout" aria-label="Tập luyện"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></button>
 </nav>
 
+<script src="config.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const KEY='tangcan_v1';
@@ -416,10 +427,12 @@ const PLAN=[ // 0 = Chủ nhật
  {n:'Thứ 7',s:'T7',title:'Toàn thân nhẹ',desc:'Kết hợp các động tác đã học.',mods:['warm','full','stretch']}
 ];
 
+const blank=()=>({p:{h:170,a:22,s:'m',g:60,pace:350,act:1.375},w:[],c:{},cup:{},wo:{},rem:false,remW:false,nt:{},updatedAt:0});
 let S=load();
-function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s){s.p=Object.assign({h:170,a:22,s:'m',g:60,pace:350,act:1.375},s.p);s.cup=s.cup||{};s.wo=s.wo||{};s.c=s.c||{};s.nt=s.nt||{};s.w=s.w||[];return s}}catch(e){}
-  return{p:{h:170,a:22,s:'m',g:60,pace:350,act:1.375},w:[],c:{},cup:{},wo:{},rem:false,remW:false,nt:{}}}
-function save(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function load(){try{const s=JSON.parse(localStorage.getItem(KEY));if(s){s.p=Object.assign({h:170,a:22,s:'m',g:60,pace:350,act:1.375},s.p);s.cup=s.cup||{};s.wo=s.wo||{};s.c=s.c||{};s.nt=s.nt||{};s.w=s.w||[];s.updatedAt=s.updatedAt||0;return s}}catch(e){}
+  return blank()}
+function persist(){try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+function save(){S.updatedAt=Date.now();persist();pushSoon()}
 const dkey=(d=new Date())=>d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 const tk=()=>dkey();
 const last=()=>S.w.length?S.w[S.w.length-1].w:null;
@@ -445,7 +458,6 @@ function go(t){
 function stagger(){document.querySelectorAll('.tab.on .card,.tab.on .tools,.tab.on .mini').forEach((e,i)=>e.style.setProperty('--i',i))}
 function goWeight(){go('weight');setTimeout(()=>$('wIn').focus(),400)}
 document.querySelectorAll('.dock .nav').forEach(b=>b.onclick=()=>go(b.dataset.t));
-$('avatar').onclick=()=>{go('weight');setTimeout(()=>$('profileCard').scrollIntoView({behavior:'smooth',block:'center'}),450)};
 $('reload').onclick=function(){this.classList.add('spin');setTimeout(()=>location.reload(),350)};
 addEventListener('scroll',()=>$('top').classList.toggle('scrolled',scrollY>8),{passive:true});
 addEventListener('resize',placePill);
@@ -493,7 +505,7 @@ function renderWater(){
 }
 async function toggleRemindW(){
   if(!S.remW){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();S.remW=true;toast('Đã bật nhắc uống nước')}else S.remW=false;
-  save();renderWater()}
+  persist();renderWater()}
 
 /* ---------- HÔM NAY ---------- */
 function renderHome(){
@@ -528,7 +540,7 @@ function addWeight(){const v=parseFloat($('wIn').value);if(!v||v<20||v>250)retur
 function delWeight(d){S.w=S.w.filter(x=>x.d!==d);save();renderAll()}
 function saveProfile(){S.p=Object.assign(S.p,{h:+$('pH').value||170,a:+$('pA').value||22,s:$('pS').value,g:+$('pG').value||60,act:+$('pAct').value||1.375});save();renderAll();toast('Đã lưu thông tin')}
 function demoData(){const n=new Date();S.w=[];let w=50;for(let i=28;i>=0;i-=2){const d=new Date(n);d.setDate(n.getDate()-i);w+=0.15+(Math.random()-.4)*0.2;S.w.push({d:dkey(d),w:Math.round(w*10)/10})}S.p.g=58;save();renderAll();toast('Đã nạp dữ liệu mẫu')}
-function resetAll(){if(confirm('Xóa toàn bộ dữ liệu?')){localStorage.removeItem(KEY);S=load();renderAll()}}
+function resetAll(){if(confirm('Xóa toàn bộ dữ liệu? Nếu đã đăng nhập Google, dữ liệu trên Google cũng bị xóa.')){const keep={rem:S.rem,remW:S.remW};S=blank();Object.assign(S,keep);S.updatedAt=Date.now();persist();pushSoon();renderAll()}}
 
 function renderWeight(){
   $('pH').value=S.p.h;$('pA').value=S.p.a;$('pS').value=S.p.s;$('pG').value=S.p.g;$('pAct').value=String(S.p.act);
@@ -554,14 +566,14 @@ function renderMeal(){
 }
 async function toggleRemind(){
   if(!S.rem){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();S.rem=true;toast('Đã bật nhắc ăn')}else S.rem=false;
-  save();renderMeal()}
+  persist();renderMeal()}
 
 function notify(title,msg){toast(msg);if('Notification' in window&&Notification.permission==='granted')new Notification(title,{body:msg})}
 function checkReminders(){
   const n=new Date(),nowMin=n.getHours()*60+n.getMinutes(),hm=hhmm(nowMin),k=tk();
   S.nt[k]=S.nt[k]||{};
-  if(S.rem)MEALS.forEach(m=>{if(m.t===hm&&!S.nt[k][m.id]&&!(S.c[k]||{})[m.id]){S.nt[k][m.id]=1;save();notify('Giờ ăn rồi!',`🍽️ Đến giờ ${m.n.toLowerCase()}: ${m.d}`)}});
-  if(S.remW){const wp=waterPlan(),d=S.cup[k]||{};wp.times.forEach((t,i)=>{const id='w'+i;if(t===nowMin&&!S.nt[k][id]&&!d[i]){S.nt[k][id]=1;save();notify('Uống nước nào!',`💧 Cốc ${i+1}/${wp.n} (100 ml)`)}})}
+  if(S.rem)MEALS.forEach(m=>{if(m.t===hm&&!S.nt[k][m.id]&&!(S.c[k]||{})[m.id]){S.nt[k][m.id]=1;persist();notify('Giờ ăn rồi!',`🍽️ Đến giờ ${m.n.toLowerCase()}: ${m.d}`)}});
+  if(S.remW){const wp=waterPlan(),d=S.cup[k]||{};wp.times.forEach((t,i)=>{const id='w'+i;if(t===nowMin&&!S.nt[k][id]&&!d[i]){S.nt[k][id]=1;persist();notify('Uống nước nào!',`💧 Cốc ${i+1}/${wp.n} (100 ml)`)}})}
 }
 setInterval(checkReminders,20000);
 
@@ -590,6 +602,146 @@ function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
 function startTimer(sec,label){clearInterval(tid);let r=sec;$('timerLbl').textContent=label||'';$('timer').textContent=fmt(r);
   tid=setInterval(()=>{r--;$('timer').textContent=fmt(Math.max(r,0));if(r<=0){clearInterval(tid);$('timer').textContent='Xong!';toast('Hết giờ: '+(label||''));try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}},1000)}
 function stopTimer(){clearInterval(tid);$('timer').textContent='1:00';$('timerLbl').textContent='Nghỉ giữa hiệp'}
+
+/* ---------- đăng nhập Google + đồng bộ Drive ---------- */
+const CLIENT_ID=window.GOOGLE_CLIENT_ID||'',AUTH_URL=(window.AUTH_URL||'').replace(/\/+$/,'');
+const FLAG='tangcan-signedin',RT_KEY='tangcan-refresh',TOKEN_KEY='tangcan-token',SYNCED='tangcan-synced',STATE_KEY='tangcan-oauth-state';
+const FILE_NAME='tangcan-data.json',SCOPE='https://www.googleapis.com/auth/drive.appdata';
+const SYNC={token:null,exp:0,fileId:null,status:'local',last:null,busy:false,again:false,timer:null,choose:false};
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}};
+const lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const lsDel=k=>{try{localStorage.removeItem(k)}catch(e){}};
+try{const t=JSON.parse(lsGet(TOKEN_KEY)||'null');if(t&&t.exp>Date.now()+60000){SYNC.token=t.t;SYNC.exp=t.exp}}catch(e){}
+const signedIn=()=>lsGet(FLAG)==='1';
+const STATUS_TEXT={local:'Chưa đăng nhập, dữ liệu chỉ lưu trên máy',busy:'Đang đồng bộ…',ok:'Đã đồng bộ với Google',auth:'Cần đăng nhập lại',err:'Lỗi đồng bộ'};
+function setSync(st,msg=''){
+  SYNC.status=st;SYNC.msg=msg;document.body.classList.toggle('syncing',st==='busy');
+  const dot=document.querySelector('#sync .st');dot.className='st '+(CLIENT_ID?st:'local');
+  const bar=$('syncbar'),bad=CLIENT_ID&&signedIn()&&(st==='auth'||st==='err');
+  bar.style.display=bad?'':'none';
+  if(bad)bar.textContent=st==='auth'?'Chưa đồng bộ lên Google vì phiên đăng nhập đã hết hạn. Chạm vào đây để đăng nhập lại.':'Lỗi đồng bộ: '+(msg||'không rõ')+'. Chạm vào đây để thử lại.';
+}
+$('syncbar').onclick=()=>syncNow(true);
+const redirectUri=()=>location.origin+location.pathname.replace(/index\.html$/,'');
+function loginUrl(choose){
+  const st=Math.random().toString(36).slice(2)+Date.now().toString(36);lsSet(STATE_KEY,st);
+  return 'https://accounts.google.com/o/oauth2/v2/auth?'+new URLSearchParams({client_id:CLIENT_ID,redirect_uri:redirectUri(),response_type:'code',scope:SCOPE,access_type:'offline',include_granted_scopes:'true',prompt:choose?'consent select_account':'consent',state:st});
+}
+async function authPost(path,body){const r=await fetch(AUTH_URL+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});return{ok:r.ok,status:r.status,j:await r.json().catch(()=>({}))}}
+const saveToken=(t,exp)=>{SYNC.token=t;SYNC.exp=Date.now()+Number(exp)*1000;lsSet(FLAG,'1');lsSet(TOKEN_KEY,JSON.stringify({t,exp:SYNC.exp}))};
+async function finishLogin(){
+  const u=new URL(location.href),code=u.searchParams.get('code'),st=u.searchParams.get('state'),err=u.searchParams.get('error');
+  if(!code&&!err)return;
+  history.replaceState(null,'',location.pathname);
+  const saved=lsGet(STATE_KEY);lsDel(STATE_KEY);
+  if(err)return toast('Đăng nhập Google chưa thành công: '+err);
+  if(!st||st!==saved)return toast('Phiên đăng nhập không khớp, hãy thử lại');
+  setSync('busy');
+  try{
+    const res=await authPost('/token',{code,redirect_uri:redirectUri()});
+    if(!res.ok||!res.j.access_token)throw new Error(res.j.detail||res.j.error||res.status);
+    if(!String(res.j.scope||'').includes('drive.appdata'))throw new Error('Chưa cấp quyền Google Drive, hãy đăng nhập lại và tick ô quyền truy cập');
+    if(!res.j.refresh_token)throw new Error('Google không cấp quyền duy trì đăng nhập, hãy đăng nhập lại');
+    lsSet(RT_KEY,res.j.refresh_token);lsDel(SYNCED);saveToken(res.j.access_token,res.j.expires_in);
+  }catch(e){setSync('local');toast('Đăng nhập chưa thành công: '+e.message)}
+}
+async function getToken(interactive){
+  if(SYNC.token&&Date.now()<SYNC.exp-60000)return SYNC.token;
+  const rt=lsGet(RT_KEY);
+  if(rt){
+    let res;try{res=await authPost('/refresh',{refresh_token:rt})}catch(e){throw new Error('net: không kết nối được máy chủ đăng nhập')}
+    if(res.ok&&res.j.access_token){saveToken(res.j.access_token,res.j.expires_in);return SYNC.token}
+    if(res.status===401){lsDel(RT_KEY);throw new Error('auth: phiên đăng nhập Google đã hết hạn')}
+    throw new Error('net: máy chủ đăng nhập báo lỗi '+res.status);
+  }
+  if(interactive){const c=SYNC.choose;SYNC.choose=false;location.href=loginUrl(c);return new Promise(()=>{})}
+  throw new Error('auth: chưa đăng nhập');
+}
+const gfetch=async(url,token,opts={},retried=false)=>{
+  const r=await fetch(url,{...opts,headers:{Authorization:'Bearer '+token,...(opts.headers||{})}});
+  if(r.status===401){SYNC.token=null;lsDel(TOKEN_KEY);if(!retried)return gfetch(url,await getToken(false),opts,true);throw new Error('auth: 401')}
+  if(!r.ok)throw new Error('drive: '+r.status);
+  return r;
+};
+async function findFile(token){const q=encodeURIComponent("name='"+FILE_NAME+"'");const j=await(await gfetch('https://www.googleapis.com/drive/v3/files?spaces=appDataFolder&fields=files(id)&q='+q,token)).json();return j.files&&j.files[0]}
+// chỉ đồng bộ dữ liệu người dùng; cài đặt nhắc (rem, remW, nt) là riêng từng thiết bị
+const docOf=o=>({p:o.p,w:o.w,c:o.c,cup:o.cup,wo:o.wo,updatedAt:o.updatedAt||0});
+const normalize=o=>({p:Object.assign(blank().p,o.p),w:o.w||[],c:o.c||{},cup:o.cup||{},wo:o.wo||{},updatedAt:o.updatedAt||0});
+const download=async(token,id)=>normalize(await(await gfetch('https://www.googleapis.com/drive/v3/files/'+id+'?alt=media',token)).json());
+async function upload(token,id,obj){
+  const b='tc'+Date.now(),meta=id?{}:{name:FILE_NAME,parents:['appDataFolder']};
+  const body='--'+b+'\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n'+JSON.stringify(meta)+'\r\n--'+b+'\r\nContent-Type: application/json\r\n\r\n'+JSON.stringify(docOf(obj))+'\r\n--'+b+'--';
+  const url=id?'https://www.googleapis.com/upload/drive/v3/files/'+id+'?uploadType=multipart':'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id';
+  const j=await(await gfetch(url,token,{method:id?'PATCH':'POST',headers:{'Content-Type':'multipart/related; boundary='+b},body})).json();
+  return j.id||id;
+}
+const hasData=o=>(o.w||[]).length+Object.keys(o.c||{}).length+Object.keys(o.cup||{}).length+Object.keys(o.wo||{}).length>0;
+const orMap=(a,b)=>{const r={};for(const k of new Set([...Object.keys(a||{}),...Object.keys(b||{})])){const x=a&&a[k],y=b&&b[k];r[k]=(x&&typeof x==='object')||(y&&typeof y==='object')?orMap(x,y):!!(x||y)}return r};
+function mergeDocs(l,r){
+  const m=new Map();[...r.w,...l.w].forEach(x=>m.set(x.d,x));
+  return{p:(l.updatedAt||0)>=(r.updatedAt||0)?l.p:r.p,w:[...m.values()].sort((a,b)=>a.d.localeCompare(b.d)),c:orMap(l.c,r.c),cup:orMap(l.cup,r.cup),wo:orMap(l.wo,r.wo),updatedAt:Date.now()};
+}
+function adopt(doc){Object.assign(S,doc);persist();renderAll()}
+async function syncNow(interactive){
+  if(!CLIENT_ID)return;
+  if(SYNC.busy){SYNC.again=true;return}
+  SYNC.busy=true;setSync('busy');
+  try{
+    const token=await getToken(interactive);
+    const file=await findFile(token);SYNC.fileId=file?file.id:null;
+    const remote=file?await download(token,file.id):null;
+    const first=lsGet(SYNCED)!=='1';
+    if(!remote)SYNC.fileId=await upload(token,null,S);
+    else if(first&&hasData(S)&&hasData(remote)){adopt(mergeDocs(S,remote));await upload(token,SYNC.fileId,S)}
+    else if(remote.updatedAt>(S.updatedAt||0))adopt(remote);
+    else if((S.updatedAt||0)>remote.updatedAt)await upload(token,SYNC.fileId,S);
+    lsSet(SYNCED,'1');SYNC.last=new Date();setSync('ok');
+  }catch(e){
+    console.error(e);
+    const isAuth=/^auth/.test(e.message);
+    setSync(!signedIn()?'local':isAuth?'auth':'err',e.message);
+  }finally{SYNC.busy=false;if(SYNC.again){SYNC.again=false;syncNow(false)}}
+}
+function pushSoon(){if(!CLIENT_ID||!signedIn())return;clearTimeout(SYNC.timer);SYNC.timer=setTimeout(()=>syncNow(false),1500)}
+function signOut(){
+  const rt=lsGet(RT_KEY);if(rt)authPost('/revoke',{token:rt}).catch(()=>{});
+  [FLAG,SYNCED,TOKEN_KEY,RT_KEY].forEach(lsDel);SYNC.token=null;SYNC.fileId=null;SYNC.last=null;setSync('local');
+}
+async function leaveAccount(thenSignIn){
+  if(!confirm('Dữ liệu đã nằm trong Google của tài khoản này. Máy này sẽ được xóa sạch dữ liệu để không lẫn sang tài khoản khác. Tiếp tục?'))return;
+  while(SYNC.busy)await new Promise(r=>setTimeout(r,200));
+  await syncNow(false);
+  if(SYNC.status!=='ok')return toast('Chưa đẩy được dữ liệu lên Google nên chưa thể đăng xuất. Kiểm tra mạng rồi thử lại.');
+  signOut();const keep={rem:S.rem,remW:S.remW};S=blank();Object.assign(S,keep);persist();renderAll();
+  if(thenSignIn){SYNC.choose=true;syncNow(true)}
+}
+function exportJson(){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(docOf(S),null,1)],{type:'application/json'}));a.download='tang-can-sao-luu-'+tk()+'.json';document.body.append(a);a.click();a.remove()}
+function importJson(){
+  const inp=document.createElement('input');inp.type='file';inp.accept='application/json,.json';inp.style.display='none';
+  inp.onchange=async()=>{const f=inp.files[0];inp.remove();if(!f)return;let o;try{o=JSON.parse(await f.text())}catch(e){return toast('File không phải bản sao lưu hợp lệ')}
+    if(!Array.isArray(o.w))return toast('File thiếu dữ liệu cân nặng');
+    if(!confirm('Nhập bản sao lưu ('+o.w.length+' lần cân) sẽ thay thế toàn bộ dữ liệu hiện tại trên máy này. Tiếp tục?'))return;
+    Object.assign(S,normalize(o));S.updatedAt=Date.now();persist();pushSoon();renderAll();toast('Đã nhập bản sao lưu')};
+  document.body.append(inp);inp.click();
+}
+const pad2=n=>String(n).padStart(2,'0');
+function openMenu(){
+  const items=[];
+  if(!CLIENT_ID)items.push(['Chưa cấu hình Google',()=>toast('Thiếu Google Client ID trong config.js')]);
+  else if(!signedIn())items.push(['Đăng nhập Google để lưu dữ liệu',()=>syncNow(true)]);
+  else items.push(['Đồng bộ ngay',()=>syncNow(true)],['Đổi tài khoản Google',()=>leaveAccount(true)],['Đăng xuất',()=>leaveAccount(false)]);
+  items.push(['Xuất file sao lưu',exportJson],['Nhập file sao lưu',importJson]);
+  const st=STATUS_TEXT[SYNC.status]+(SYNC.last&&SYNC.status==='ok'?' · '+pad2(SYNC.last.getHours())+':'+pad2(SYNC.last.getMinutes()):'');
+  const m=$('menu');m.innerHTML='<div class="mt2">'+st+'</div>';
+  items.forEach(([t,fn])=>{const b=document.createElement('button');b.textContent=t;b.onclick=()=>{closeMenu();fn()};m.append(b)});
+  $('menuBg').classList.add('on');
+}
+function closeMenu(){$('menuBg').classList.remove('on')}
+$('menuBg').onclick=e=>{if(e.target.id==='menuBg')closeMenu()};
+$('sync').onclick=openMenu;
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&signedIn()&&(!SYNC.last||Date.now()-SYNC.last>30000))syncNow(false)});
+setSync('local');
+finishLogin().then(()=>{if(signedIn())syncNow(false)});
 
 function renderAll(){renderHome();renderWeight();renderMeal();renderWater();renderWorkout()}
 renderAll();stagger();placePill();
