@@ -193,9 +193,25 @@ svg{display:block}
 .mh .mi{width:44px;height:44px;border-radius:50%;background:var(--black);color:#fff;display:grid;place-items:center;font-weight:600;flex:none}
 .mh .in{flex:1;min-width:0}
 .mh .nm{font-weight:600}.mh .sb{font-size:12px;color:var(--mute)}
-.mb{display:none;padding:0 16px 14px 68px;font-size:13px}
+.mb{display:none;padding:0 14px 14px;font-size:13px}
 .mrow.open .mb{display:block;animation:rise .45s var(--ease)}
-.mb ul{margin:0 0 6px;padding-left:18px}.mb li{margin-bottom:3px}
+.exc{display:grid;grid-template-columns:124px 1fr;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.exc:first-child{border-top:0}
+.figw{background:rgba(0,0,0,.05);border-radius:18px;padding:6px;align-self:start}
+.fig{width:100%;height:auto;display:block}
+.exn{font-weight:600;font-size:14px}.exm{font-size:12px;color:var(--pri);font-weight:600;margin-top:1px}
+.exq{font-size:12.5px;color:#55555b;margin-top:4px;line-height:1.4}
+.sets{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.sb2{width:34px;height:34px;border-radius:50%;border:1.5px solid rgba(0,0,0,.2);background:rgba(255,255,255,.7);font-weight:600;font-size:13px;display:grid;place-items:center;transition:transform .14s var(--ease),background .2s}
+.sb2:active{transform:scale(.88)}.sb2 svg{width:15px;height:15px}
+.sb2.on{background:var(--pri);border-color:var(--pri);color:#fff}
+.sb2:disabled{opacity:.45}
+.exa{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chip2{border:0;border-radius:999px;padding:6px 12px;font-size:12px;font-weight:600;background:#141414;color:#fff;text-decoration:none;display:inline-block}
+.tpill{position:fixed;left:50%;bottom:calc(98px + env(safe-area-inset-bottom) * .3);transform:translateX(-50%) translateY(20px);z-index:17;background:rgba(20,20,22,.94);color:#fff;border-radius:999px;padding:10px 20px;display:flex;gap:12px;align-items:center;box-shadow:0 10px 28px rgba(0,0,0,.3);opacity:0;pointer-events:none;transition:opacity .3s,transform .4s var(--ease)}
+.tpill.on{opacity:1;pointer-events:auto;transform:translateX(-50%)}
+.tpill b{font-size:22px;font-variant-numeric:tabular-nums;letter-spacing:-.5px}.tpill span{font-size:12px;color:#c4c4c9;max-width:140px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:380px){.exc{grid-template-columns:1fr}}
 .mb .tip{color:var(--mute);font-size:12.5px}
 .timer{font-size:60px;font-weight:700;letter-spacing:-3px;text-align:center;font-variant-numeric:tabular-nums;line-height:1.1;margin:8px 0 12px}
 .timer-l{text-align:center}
@@ -373,6 +389,7 @@ body{--dir:0}
   </main>
 </div>
 
+<div class="tpill" id="tpill" onclick="stopTimer()"><b id="tpT">0:00</b><span id="tpL"></span></div>
 <div class="menuBg" id="menuBg"><div class="menu" id="menu"></div></div>
 <div class="veil"></div>
 <nav class="dock" id="dock">
@@ -405,17 +422,116 @@ const PACES=[
  {v:350,n:'Chuẩn (khuyên dùng)',d:'Cân bằng, nằm trong khoảng NHS 300–500'},
  {v:500,n:'Nhanh',d:'Mức tối đa NHS; tăng nhanh hơn nhưng dễ kèm mỡ'}
 ];
+/* ---------- hình minh họa (vẽ bằng SVG, tự chuyển động giữa 2 tư thế) ---------- */
+const P=(h,t,...l)=>({h,t,l}),F=p=>({f:1,p});
+const FT=[[60,20],[60,44]],FL1=[[56,44],[55,58],[55,72]],FL2=[[64,44],[65,58],[65,72]];
+const CHAIR='<path d="M16 56h26M16 56v-15M18 56v16M40 56v16" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" fill="none"/>';
+const DOOR='<path d="M30 -4v80M90 -4v80" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" fill="none"/>';
+const CHAIR2='<path d="M84 52h28M88 52v20M108 52v20" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" fill="none"/>';
+const FIG={
+ shrug:[P([60,12],FT,[[49,24],[71,24]],[[50,24],[47,36],[46,46]],[[70,24],[73,36],[74,46]],FL1,FL2),
+        P([60,12],FT,[[49,19],[71,19]],[[50,19],[47,31],[46,41]],[[70,19],[73,31],[74,41]],FL1,FL2)],
+ hipc:[P([62,12],[[61,20],[56,44]],[[51,22],[71,22]],[[52,22],[43,33],[50,43]],[[70,22],[77,33],[62,43]],[[51,44],[50,58],[52,72]],[[61,44],[63,58],[67,72]]),
+       P([58,12],[[59,20],[64,44]],[[49,22],[69,22]],[[50,22],[43,33],[58,43]],[[68,22],[77,33],[70,43]],[[59,44],[57,58],[53,72]],[[69,44],[70,58],[68,72]])],
+ march:[P([62,12],FT,[[60,22],[54,32],[52,40]],F([[60,22],[66,30],[72,36]]),[[60,44],[74,48],[74,62]],F([[60,44],[60,58],[60,72]])),
+        P([62,12],FT,[[60,22],[66,30],[72,36]],F([[60,22],[54,32],[52,40]]),[[60,44],[60,58],[60,72]],F([[60,44],[74,48],[74,62]]))],
+ walk:[P([62,12],FT,[[60,22],[54,32],[50,40],[50,40]],F([[60,22],[66,32],[70,40],[70,40]]),[[60,44],[68,58],[72,72],[79,72]],F([[60,44],[54,58],[46,70],[42,66]])),
+       P([62,12],FT,[[60,22],[66,32],[70,40],[70,40]],F([[60,22],[54,32],[50,40],[50,40]]),[[60,44],[54,58],[46,70],[42,66]],F([[60,44],[68,58],[72,72],[79,72]]))],
+ squat:[P([60,12],FT,[[60,22],[62,32],[64,42]],[[60,44],[61,58],[60,72],[67,72]]),
+        P([50,24],[[53,32],[40,54]],[[53,34],[63,36],[73,36]],[[40,54],[62,56],[60,72],[67,72]]),CHAIR],
+ lunge:[P([60,12],FT,[[60,22],[52,32],[58,42]],[[60,44],[61,58],[60,72],[67,72]],F([[60,44],[59,58],[58,72],[65,72]])),
+        P([60,22],[[60,30],[60,54]],[[60,32],[52,42],[58,52]],[[60,54],[78,54],[78,72],[85,72]],F([[60,54],[46,68],[32,70],[27,66]]))],
+ calf:[P([60,12],FT,[[60,22],[62,32],[64,42]],[[60,44],[61,58],[60,72],[67,72]]),
+       P([60,6],[[60,14],[60,38]],[[60,16],[62,26],[64,36]],[[60,38],[61,52],[61,66],[67,72]])],
+ bridge:[P([20,68],[[30,68],[62,68]],[[32,68],[46,70],[58,70]],[[62,68],[80,52],[90,70],[97,70]]),
+         P([20,68],[[30,68],[62,50]],[[32,68],[46,70],[58,70]],[[62,50],[80,50],[90,70],[97,70]])],
+ birddog:[P([30,44],[[38,48],[78,50]],[[38,50],[38,62],[38,72],[42,72]],F([[38,50],[40,62],[42,72],[46,72]]),[[78,50],[78,70],[92,70],[96,70]],F([[78,50],[78,70],[92,70],[96,70]])),
+          P([30,44],[[38,48],[78,50]],[[38,50],[28,48],[18,46],[10,45]],F([[38,50],[40,62],[42,72],[46,72]]),[[78,50],[78,70],[92,70],[96,70]],F([[78,50],[92,50],[106,50],[112,50]]))],
+ superman:[P([28,66],[[36,66],[72,66]],[[36,66],[26,68],[16,68],[10,68]],[[72,66],[88,68],[102,68],[108,68]]),
+           P([27,56],[[36,62],[72,66]],[[36,62],[26,58],[16,54],[10,52]],[[72,66],[88,62],[102,58],[108,56]])],
+ plank:[P([28,50],[[36,54],[66,60]],[[36,54],[36,70],[44,70],[48,70]],[[66,60],[88,70],[100,64],[104,62]]),
+        P([28,49],[[36,53],[66,57]],[[36,53],[36,70],[44,70],[48,70]],[[66,57],[88,70],[100,64],[104,62]])],
+ pushup:[P([26,42],[[34,48],[62,58]],[[34,48],[34,60],[34,72],[38,72]],[[62,58],[88,70],[102,62],[106,58]]),
+         P([26,56],[[34,62],[62,66]],[[34,62],[46,66],[34,72],[38,72]],[[62,66],[88,70],[102,64],[106,60]])],
+ crunch:[P([24,68],[[32,68],[62,68]],[[32,68],[26,62],[20,64],[20,64]],[[62,68],[80,54],[90,70],[97,70]]),
+         P([40,52],[[44,58],[62,68]],[[44,58],[38,50],[32,52],[32,52]],[[62,68],[80,54],[90,70],[97,70]])],
+ deadbug:[P([20,68],[[30,68],[60,68]],[[32,68],[32,56],[32,44],[32,44]],F([[32,68],[34,56],[34,44],[34,44]]),[[60,68],[60,52],[76,52],[78,52]],F([[60,68],[62,52],[78,52],[80,52]])),
+          P([20,68],[[30,68],[60,68]],[[32,68],[22,66],[12,66],[6,66]],F([[32,68],[34,56],[34,44],[34,44]]),[[60,68],[60,52],[76,52],[78,52]],F([[60,68],[76,68],[92,68],[98,68]]))],
+ lateral:[P([60,12],FT,[[51,22],[69,22]],[[51,22],[47,32],[46,42]],[[69,22],[73,32],[74,42]],FL1,FL2),
+          P([60,12],FT,[[51,22],[69,22]],[[51,22],[38,22],[26,22]],[[69,22],[82,22],[94,22]],FL1,FL2)],
+ press:[P([60,12],FT,[[51,22],[69,22]],[[51,22],[42,28],[46,18]],[[69,22],[78,28],[74,18]],FL1,FL2),
+        P([60,12],FT,[[51,22],[69,22]],[[51,22],[48,10],[48,-2]],[[69,22],[72,10],[72,-2]],FL1,FL2)],
+ breath:[P([60,12],FT,[[51,22],[69,22]],[[51,22],[47,32],[46,42]],[[69,22],[73,32],[74,42]],FL1,FL2),
+         P([60,12],FT,[[51,22],[69,22]],[[51,22],[48,10],[48,-2]],[[69,22],[72,10],[72,-2]],FL1,FL2)],
+ dips:[P([82,29],[[80,36],[74,58]],[[80,36],[81,44],[84,52]],[[74,58],[58,56],[52,72],[58,72]]),
+       P([82,40],[[80,46],[74,66]],[[80,46],[90,48],[84,52]],[[74,66],[58,62],[52,72],[58,72]]),CHAIR2],
+ row:[P([38,32],[[46,38],[72,48]],[[46,38],[48,50],[50,60]],[[72,48],[74,60],[72,72],[79,72]]),
+      P([38,32],[[46,38],[72,48]],[[46,38],[60,40],[54,48]],[[72,48],[74,60],[72,72],[79,72]])],
+ wraise:[P([28,66],[[36,66],[72,66]],[[36,66],[48,68],[60,68],[64,68]],[[72,66],[88,68],[102,68],[108,68]]),
+         P([27,57],[[36,62],[72,66]],[[36,62],[48,54],[56,60],[56,60]],[[72,66],[88,68],[102,68],[108,68]])],
+ quad:[P([60,12],FT,[[60,22],[68,32],[74,44],[76,50]],[[60,44],[61,58],[60,72],[67,72]],F([[60,44],[62,58],[74,56],[76,50]])),
+       P([60,12],FT,[[60,22],[68,32],[76,42],[78,46]],[[60,44],[61,58],[60,72],[67,72]],F([[60,44],[62,58],[76,52],[78,46]]))],
+ chest:[P([60,12],FT,[[49,22],[71,22]],[[49,22],[38,24],[34,12]],[[71,22],[82,24],[86,12]],FL1,FL2),
+        P([60,12],FT,[[47,22],[73,22]],[[47,22],[38,22],[34,8]],[[73,22],[82,22],[86,8]],FL1,FL2),DOOR],
+ child:[P([30,62],[[38,60],[76,58]],[[38,60],[26,66],[14,70],[10,70]],[[76,58],[88,70],[104,70],[108,70]]),
+        P([28,66],[[36,64],[76,60]],[[36,64],[24,68],[12,70],[8,70]],[[76,60],[88,70],[104,70],[108,70]])],
+ hamstring:[P([38,40],[[38,46],[38,66]],[[38,48],[52,54],[64,60],[70,62]],[[38,66],[68,66],[98,66],[104,66]]),
+            P([64,50],[[56,52],[38,66]],[[56,54],[72,60],[86,64],[92,66]],[[38,66],[68,66],[98,66],[104,66]])]
+};
+function figSVG(key,frame){
+  const [A,B,extra]=FIG[key],pa=pts=>'M'+pts.map(p=>p.join(' ')).join('L');
+  const dur='2.6s',ks='calcMode="spline" keyTimes="0;.5;1" keySplines=".45 0 .55 1;.45 0 .55 1"';
+  const anim=(a,b)=>frame===undefined?`<animate attributeName="d" dur="${dur}" repeatCount="indefinite" ${ks} values="${pa(a)};${pa(b)};${pa(a)}"/>`:'';
+  const one=(a,b,far)=>{const pa0=far?a.p:a,pb0=far?b.p:b,use=frame===1?pb0:pa0;
+    return `<path d="${pa(use)}" stroke="${far?'#9a9aa0':'#141414'}" stroke-width="${far?4.4:5}" fill="none" stroke-linecap="round" stroke-linejoin="round">${anim(pa0,pb0)}</path>`};
+  let s=`<svg class="fig" viewBox="0 -6 120 86" xmlns="http://www.w3.org/2000/svg"><path d="M4 74.5H116" stroke="#2f9e6b" stroke-width="2" stroke-linecap="round"/>${extra||''}`;
+  const far=[],near=[];
+  A.l.forEach((l,i)=>(l.f?far:near).push(one(l,B.l[i],!!l.f)));
+  s+=far.join('')+one(A.t,B.t,false)+near.join('');
+  const hp=frame===1?B.h:A.h;
+  s+=`<circle cx="${hp[0]}" cy="${hp[1]}" r="5.6" fill="#141414">${frame===undefined?`<animate attributeName="cx" dur="${dur}" repeatCount="indefinite" ${ks} values="${A.h[0]};${B.h[0]};${A.h[0]}"/><animate attributeName="cy" dur="${dur}" repeatCount="indefinite" ${ks} values="${A.h[1]};${B.h[1]};${A.h[1]}"/>`:''}</circle></svg>`;
+  return s;
+}
+
+const EX={
+ shrug:{n:'Xoay vai & cổ',cue:'Nhún vai lên sát tai rồi xoay ra sau, thật chậm. Cổ thả lỏng.',q:'bài tập xoay vai xoay cổ khởi động tại nhà'},
+ hipc:{n:'Xoay hông & gối',cue:'Hai tay chống hông, vẽ vòng tròn lớn bằng hông, chân đứng vững.',q:'bài tập xoay hông khởi động tại nhà'},
+ march:{n:'Đi bộ tại chỗ nâng gối cao',cue:'Nâng gối ngang hông, vung tay đối diện với chân. Nhịp đều, thở tự nhiên.',q:'march in place đi bộ tại chỗ nâng gối khởi động'},
+ squat:{n:'Squat chạm ghế',cue:'Đẩy hông ra sau như ngồi xuống ghế, chạm nhẹ rồi đứng lên. Lưng thẳng, gối hướng theo mũi chân.',q:'cách tập squat tại nhà đúng kỹ thuật người mới'},
+ lunge:{n:'Bước lunge tại chỗ',cue:'Bước một chân ra trước, hạ gối sau xuống gần sàn rồi đứng lên. Bám ghế nếu chưa vững.',q:'cách tập lunge tại nhà đúng kỹ thuật'},
+ calf:{n:'Nhón gót',cue:'Kiễng gót lên hết cỡ, giữ 1 giây, hạ xuống chậm. Bám tường cho vững.',q:'bài tập nhón gót bắp chân tại nhà'},
+ bridge:{n:'Glute bridge (nâng mông)',cue:'Nằm ngửa, gối co, đạp gót nâng hông lên thẳng hàng vai - gối. Siết mông 2 giây ở trên.',q:'cách tập glute bridge nâng mông tại nhà'},
+ birddog:{n:'Bird-dog',cue:'Chống tay quỳ gối, duỗi thẳng tay phải và chân trái cùng lúc, giữ lưng phẳng, đổi bên.',q:'cách tập bird dog đúng kỹ thuật'},
+ superman:{n:'Superman nằm sấp',cue:'Nằm sấp, nâng nhẹ tay và chân lên khỏi sàn, giữ 2 giây rồi hạ xuống. Nhìn xuống sàn, đừng ngửa cổ.',q:'cách tập superman nằm sấp lưng dưới'},
+ plank:{n:'Plank trên đầu gối',cue:'Chống khuỷu tay, thân thẳng từ vai đến gối, siết bụng, không võng lưng.',q:'cách tập plank quỳ gối cho người mới'},
+ pushup:{n:'Hít đất quỳ gối',cue:'Hạ ngực xuống 3 giây, đẩy lên dứt khoát. Người thẳng từ vai đến gối. Khó quá thì đẩy tường.',q:'cách tập hít đất quỳ gối cho người mới'},
+ pushup2:{n:'Hít đất tay hẹp (tay sau)',fig:'pushup',cue:'Hai tay đặt gần nhau dưới ngực, khuỷu tay ép sát người khi hạ xuống.',q:'hít đất tay hẹp diamond push up quỳ gối'},
+ crunch:{n:'Gập bụng nhẹ',cue:'Nằm ngửa, gối co, nhấc vai lên khỏi sàn bằng cơ bụng. Không kéo cổ.',q:'cách tập gập bụng crunch đúng kỹ thuật'},
+ deadbug:{n:'Dead bug',cue:'Nằm ngửa, tay chân tạo góc 90°. Hạ tay phải và chân trái ra xa, thu về, đổi bên. Lưng dán sàn.',q:'cách tập dead bug cho cơ bụng'},
+ lateral:{n:'Nâng chai nước sang ngang',cue:'Cầm chai nước 1–1.5 lít mỗi tay, nâng sang ngang tới vai, hạ chậm. Khuỷu tay hơi chùng.',q:'bài tập nâng tạ sang ngang lateral raise tại nhà'},
+ press:{n:'Đẩy chai nước qua đầu',cue:'Chai ngang vai, đẩy thẳng lên qua đầu, hạ về vai. Siết bụng, không ưỡn lưng.',q:'bài tập đẩy vai overhead press tại nhà'},
+ breath:{n:'Hít thở sâu',cue:'Hít vào bằng mũi đưa tay lên cao, thở ra bằng miệng hạ tay xuống.',q:'bài tập hít thở sâu thư giãn'},
+ dips:{n:'Dips ghế (tay sau)',cue:'Hai tay chống mép ghế chắc, gối co, hạ người xuống bằng cách gập khuỷu tay, rồi đẩy lên. Đặt ghế sát tường.',q:'cách tập dips ghế tay sau cho người mới'},
+ row:{n:'Cúi người kéo balo',cue:'Cúi hông, lưng phẳng, tay cầm balo (3–5 kg), kéo khuỷu tay ra sau, bóp bả vai, hạ chậm.',q:'bài tập kéo lưng với balo bent over row tại nhà'},
+ wraise:{n:'Nằm sấp bóp bả vai chữ W',cue:'Nằm sấp, khuỷu tay gập, bóp hai bả vai lại nâng tay lên hình chữ W, giữ 1 giây.',q:'bài tập prone W raise lưng trên'},
+ walk:{n:'Đi bộ nhẹ',cue:'Nhịp vừa phải, vẫn nói chuyện được. Vai thả lỏng, thở đều qua mũi.',q:'đi bộ tại nhà bài tập nhẹ nhàng'},
+ quad:{n:'Giãn đùi trước',cue:'Đứng một chân, kéo gót chân kia về mông, giữ 30 giây, đổi bên. Bám tường nếu cần.',q:'cách giãn cơ đùi trước quad stretch'},
+ chest:{n:'Giãn ngực ở khung cửa',cue:'Hai tay chống khung cửa, bước nhẹ một chân lên trước cho ngực mở ra.',q:'giãn ngực ở khung cửa doorway chest stretch'},
+ child:{n:'Tư thế em bé',cue:'Quỳ, ngồi lùi hông về gót chân, duỗi tay ra trước, thả lỏng lưng và hít thở.',q:'tư thế em bé child pose hướng dẫn'},
+ hamstring:{n:'Giãn đùi sau',cue:'Ngồi duỗi thẳng chân, gập người về trước với lưng thẳng, giữ 30 giây.',q:'cách giãn cơ đùi sau ngồi hamstring stretch'}
+};
+// e: bài; sets: số hiệp; amt: mỗi hiệp làm bao nhiêu; rest: giây nghỉ giữa hiệp; sec: nếu là bài tính giờ (giây)
 const MODS={
- warm:{n:'Khởi động & mở khớp',min:5,lv:'Rất nhẹ',steps:['Xoay cổ, vai: 10 vòng mỗi chiều','Xoay hông, gối, cổ chân: 10 vòng mỗi bên','Đi bộ tại chỗ nâng gối cao: 1 phút','Squat không tải, chậm: 8 lần','Hít thở sâu 5 nhịp']},
- push:{n:'Hít đất nhẹ (ngực, tay sau)',min:8,lv:'Nhẹ',steps:['Hít đất tường hoặc quỳ gối: 3 hiệp × 6–10 lần, hạ xuống 3 giây','Nghỉ 60 giây giữa hiệp','Hít đất tay hẹp trên đầu gối: 2 hiệp × 5–8 lần','Giãn ngực ở khung cửa: 2 × 20 giây'],tip:'Chưa làm nổi 6 lần thì tập đẩy tường trước, rồi hạ dần xuống mặt bàn, sàn nhà.'},
- shoulder:{n:'Vai & tay sau',min:7,lv:'Nhẹ',steps:['Nâng chai nước 1–1.5 lít sang ngang: 3 × 10','Đẩy chai nước qua đầu: 3 × 10','Chống tay ghế, gối co (dips): 2 × 8','Nghỉ 45–60 giây giữa hiệp'],tip:'Dùng ghế chắc, đặt sát tường.'},
- legs:{n:'Squat ghế & bước chân',min:8,lv:'Nhẹ',steps:['Squat chạm ghế rồi đứng lên: 3 × 10–12','Bước lunge tại chỗ, bám ghế nếu cần: 2 × 8 mỗi chân','Nhón gót: 2 × 15','Nghỉ 60 giây giữa hiệp'],tip:'Gối hướng theo mũi chân, lưng thẳng.'},
- glute:{n:'Mông & lưng dưới',min:7,lv:'Rất nhẹ',steps:['Glute bridge: 3 × 12, siết mông 2 giây','Bird-dog: 2 × 8 mỗi bên','Superman nằm sấp, nâng nhẹ: 2 × 8, giữ 2 giây','Tư thế em bé nghỉ 30 giây']},
- back:{n:'Kéo lưng với balo',min:8,lv:'Nhẹ',steps:['Cúi người kéo balo (nhét sách khoảng 3–5 kg): 3 × 10','Nằm sấp bóp bả vai hình chữ W: 2 × 10','Nghỉ 60 giây giữa hiệp'],tip:'Bóp bả vai về sau khi kéo, không giật.'},
- core:{n:'Bụng nhẹ (plank, dead bug)',min:7,lv:'Nhẹ',steps:['Plank trên đầu gối: 3 × 20–30 giây','Dead bug: 2 × 8 mỗi bên','Gập bụng nhẹ: 2 × 10','Nghỉ 45 giây giữa hiệp']},
- full:{n:'Vòng tuần hoàn toàn thân nhẹ',min:10,lv:'Vừa',steps:['Squat 10 → hít đất quỳ 6 → glute bridge 10 → plank gối 20 giây','Nghỉ 60 giây rồi lặp lại 2–3 vòng']},
- walk:{n:'Đi bộ nhẹ',min:10,lv:'Rất nhẹ',steps:['Đi bộ trong nhà hoặc ngoài trời ở nhịp vẫn nói chuyện được','Thở đều qua mũi, vai thả lỏng']},
- stretch:{n:'Giãn cơ & thư giãn',min:5,lv:'Rất nhẹ',steps:['Giãn đùi trước, đùi sau: 30 giây mỗi bên','Giãn ngực, vai: 30 giây mỗi bên','Tư thế em bé: 1 phút','Hít bụng sâu 10 nhịp']}
+ warm:{n:'Khởi động & mở khớp',min:5,lv:'Rất nhẹ',ex:[{e:'shrug',sets:1,amt:'10 vòng mỗi chiều'},{e:'hipc',sets:1,amt:'10 vòng mỗi bên'},{e:'march',sets:1,amt:'60 giây',sec:60},{e:'squat',sets:1,amt:'8 lần, thật chậm'},{e:'breath',sets:1,amt:'5 nhịp'}]},
+ push:{n:'Hít đất nhẹ (ngực, tay sau)',min:8,lv:'Nhẹ',ex:[{e:'pushup',sets:3,amt:'6–10 lần',rest:60},{e:'pushup2',sets:2,amt:'5–8 lần',rest:60},{e:'chest',sets:2,amt:'20 giây',sec:20,rest:15}],tip:'Chưa làm nổi 6 lần thì tập đẩy tường trước, rồi hạ dần xuống mặt bàn, sàn nhà.'},
+ shoulder:{n:'Vai & tay sau',min:7,lv:'Nhẹ',ex:[{e:'lateral',sets:3,amt:'10 lần',rest:45},{e:'press',sets:3,amt:'10 lần',rest:45},{e:'dips',sets:2,amt:'8 lần',rest:60}],tip:'Dùng ghế chắc, đặt sát tường.'},
+ legs:{n:'Squat ghế & bước chân',min:8,lv:'Nhẹ',ex:[{e:'squat',sets:3,amt:'10–12 lần',rest:60},{e:'lunge',sets:2,amt:'8 lần mỗi chân',rest:60},{e:'calf',sets:2,amt:'15 lần',rest:45}],tip:'Gối hướng theo mũi chân, lưng thẳng.'},
+ glute:{n:'Mông & lưng dưới',min:7,lv:'Rất nhẹ',ex:[{e:'bridge',sets:3,amt:'12 lần',rest:45},{e:'birddog',sets:2,amt:'8 lần mỗi bên',rest:45},{e:'superman',sets:2,amt:'8 lần, giữ 2 giây',rest:45},{e:'child',sets:1,amt:'30 giây',sec:30}]},
+ back:{n:'Kéo lưng với balo',min:8,lv:'Nhẹ',ex:[{e:'row',sets:3,amt:'10 lần',rest:60},{e:'wraise',sets:2,amt:'10 lần',rest:45}],tip:'Bóp bả vai về sau khi kéo, không giật.'},
+ core:{n:'Bụng nhẹ (plank, dead bug)',min:7,lv:'Nhẹ',ex:[{e:'plank',sets:3,amt:'20–30 giây',sec:25,rest:45},{e:'deadbug',sets:2,amt:'8 lần mỗi bên',rest:45},{e:'crunch',sets:2,amt:'10 lần',rest:45}]},
+ full:{n:'Vòng tuần hoàn toàn thân nhẹ',min:10,lv:'Vừa',ex:[{e:'squat',sets:3,amt:'10 lần (vòng)',rest:0},{e:'pushup',sets:3,amt:'6 lần (vòng)',rest:0},{e:'bridge',sets:3,amt:'10 lần (vòng)',rest:0},{e:'plank',sets:3,amt:'20 giây (vòng)',sec:20,rest:60}],tip:'Làm lần lượt 4 bài là 1 vòng, nghỉ 60 giây rồi làm vòng tiếp theo (tổng 3 vòng). Tick ô vòng 1, 2, 3 ở mỗi bài.'},
+ walk:{n:'Đi bộ nhẹ',min:10,lv:'Rất nhẹ',ex:[{e:'walk',sets:1,amt:'10 phút',sec:600}]},
+ stretch:{n:'Giãn cơ & thư giãn',min:5,lv:'Rất nhẹ',ex:[{e:'quad',sets:2,amt:'30 giây mỗi bên',sec:30,rest:10},{e:'chest',sets:1,amt:'30 giây',sec:30},{e:'hamstring',sets:2,amt:'30 giây',sec:30,rest:10},{e:'child',sets:1,amt:'60 giây',sec:60},{e:'breath',sets:1,amt:'10 nhịp'}]}
 };
 const PLAN=[ // 0 = Chủ nhật
  {n:'Chủ nhật',s:'CN',rest:true,title:'Nghỉ nhẹ',desc:'Vận động rất nhẹ để cơ phục hồi.',mods:['walk','stretch']},
@@ -592,16 +708,29 @@ function renderWorkout(){
     return `<div class="mrow ${dn?'done':''} ${OPEN.has(id)?'open':''}"><div class="mh" onclick="openMod('${id}')"><div class="mi">${idx+1}</div><div class="in"><div class="nm">${m.n}</div><div class="sb">${m.min} phút · ${m.lv}</div></div>
     <button class="qbtn go" onclick="event.stopPropagation();startTimer(${m.min*60},'${m.n.replace(/'/g,'')}');scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" aria-label="Bấm giờ">${PLAY}</button>
     ${isToday?`<button class="qbtn ${dn?'on':''}" onclick="event.stopPropagation();doneMod('${id}')" aria-label="Đánh dấu xong">${CHECK}</button>`:''}</div>
-    <div class="mb"><ul>${m.steps.map(s=>`<li>${s}</li>`).join('')}</ul>${m.tip?`<div class="tip">💡 ${m.tip}</div>`:''}</div></div>`}).join('');
+    <div class="mb">${exHTML(id,m,isToday,o)}${m.tip?`<div class="tip">💡 ${m.tip}</div>`:''}</div></div>`}).join('');
+}
+function exHTML(mid,m,isToday,o){return m.ex.map((x,ei)=>{const d=EX[x.e],fig=d.fig||x.e,total=x.sets;
+  const boxes=Array.from({length:total},(_,i)=>{const on=!!o[`x_${mid}_${ei}_${i}`];return `<button class="sb2 ${on?'on':''}" ${isToday?`onclick="tickSet('${mid}',${ei},${i})"`:'disabled'} aria-label="Hiệp ${i+1}">${on?CHECK:i+1}</button>`}).join('');
+  return `<div class="exc"><div class="figw">${figSVG(fig)}</div><div class="exi"><div class="exn">${d.n}</div><div class="exm">${total>1?total+' hiệp × ':''}${x.amt}${x.rest?' · nghỉ '+x.rest+' giây':''}</div><div class="exq">${d.cue}</div>
+  <div class="sets">${boxes}</div><div class="exa">${x.sec?`<button class="chip2" onclick="startTimer(${x.sec},'${d.n}')">⏱ ${x.sec>=60?(x.sec/60)+' phút':x.sec+' giây'}</button>`:''}<a class="chip2" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=${encodeURIComponent(d.q)}">▶ Xem video</a></div></div></div>`}).join('')}
+function tickSet(mid,ei,i){
+  const k=tk(),o=woOf(k),key=`x_${mid}_${ei}_${i}`,on=!o[key],x=MODS[mid].ex[ei];
+  const n=Object.assign({},o,{[key]:on});
+  if(MODS[mid].ex.every((e,j)=>Array.from({length:e.sets},(_,q)=>n[`x_${mid}_${j}_${q}`]).every(Boolean)))n[mid]=true;
+  S.wo[k]=n;save();renderAll();
+  if(on&&i<x.sets-1&&x.rest)startTimer(x.rest,'Nghỉ trước hiệp '+(i+2));
+  else if(on&&i===x.sets-1)toast('Xong bài '+EX[x.e].n+' 💪');
 }
 function openMod(id){OPEN.has(id)?OPEN.delete(id):OPEN.add(id);renderWorkout()}
 function doneMod(id){const k=tk();const o=woOf(k);S.wo[k]=Object.assign({},o,{[id]:!o[id]});save();renderAll();if(S.wo[k][id])toast('Tốt lắm! 💪')}
 
 let tid;
 function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0')}
-function startTimer(sec,label){clearInterval(tid);let r=sec;$('timerLbl').textContent=label||'';$('timer').textContent=fmt(r);
-  tid=setInterval(()=>{r--;$('timer').textContent=fmt(Math.max(r,0));if(r<=0){clearInterval(tid);$('timer').textContent='Xong!';toast('Hết giờ: '+(label||''));try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}}},1000)}
-function stopTimer(){clearInterval(tid);$('timer').textContent='1:00';$('timerLbl').textContent='Nghỉ giữa hiệp'}
+function showTimer(t,label){$('timer').textContent=t;$('timerLbl').textContent=label||'';$('tpT').textContent=t;$('tpL').textContent=label||''}
+function startTimer(sec,label){clearInterval(tid);let r=sec;showTimer(fmt(r),label);$('tpill').classList.add('on');
+  tid=setInterval(()=>{r--;showTimer(fmt(Math.max(r,0)),label);if(r<=0){clearInterval(tid);showTimer('Xong!',label);try{navigator.vibrate&&navigator.vibrate(300)}catch(e){}setTimeout(()=>{if($('tpT').textContent==='Xong!')$('tpill').classList.remove('on')},4000)}},1000)}
+function stopTimer(){clearInterval(tid);$('tpill').classList.remove('on');$('timer').textContent='1:00';$('timerLbl').textContent='Nghỉ giữa hiệp'}
 
 /* ---------- đăng nhập Google + đồng bộ Drive ---------- */
 const CLIENT_ID=window.GOOGLE_CLIENT_ID||'',AUTH_URL=(window.AUTH_URL||'').replace(/\/+$/,'');
