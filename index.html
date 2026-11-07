@@ -81,14 +81,6 @@ svg{display:block}
 .hstrip small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:500}
 .hstrip b{font-size:20px;font-weight:600;letter-spacing:-.5px}
 .hstrip .pr{color:var(--pri)}.hstrip .wt{color:var(--water)}
-.acts{display:flex;margin-top:20px}
-.act{flex:1;height:68px;border-radius:34px;display:flex;align-items:center;gap:12px;padding:0 10px;border:0;font-weight:500;font-size:15px;color:var(--ink);background:#fff;box-shadow:0 4px 14px rgba(40,40,60,.08)}
-.act i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none}
-.act svg{width:20px;height:20px}
-.act.a1{box-shadow:inset 0 0 0 2px var(--black);background:var(--paper);position:relative;z-index:1;margin-right:-20px}
-.act.a1 i{box-shadow:inset 0 0 0 2px var(--black)}
-.act.a2{padding-left:34px;justify-content:space-between}
-.act.a2 i{background:var(--black);color:#fff}
 .kpihead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
 .kpihead b{color:var(--pri);font-size:20px;letter-spacing:-.5px}
 .kpibar{--n:20;height:16px;background:rgba(0,0,0,.1);-webkit-mask:repeating-linear-gradient(90deg,#000 0 calc(100% / var(--n) - 3px),transparent calc(100% / var(--n) - 3px) calc(100% / var(--n)));mask:repeating-linear-gradient(90deg,#000 0 calc(100% / var(--n) - 3px),transparent calc(100% / var(--n) - 3px) calc(100% / var(--n)))}
@@ -107,13 +99,13 @@ svg{display:block}
 .mini .kpibar{height:8px;margin-top:10px}
 
 /* ---------- hàng danh sách đen ---------- */
-.jrow{display:flex;align-items:center;gap:12px;padding:12px;border-radius:24px;background:#262628;margin-top:8px;transition:opacity .25s}
+.jrow{display:flex;align-items:flex-start;gap:12px;padding:12px;border-radius:24px;background:#262628;margin-top:8px;transition:opacity .25s}
 .jrow.done{opacity:.55}
 .jrow .ic{width:44px;height:44px;border-radius:50%;background:#3a3a3d;display:grid;place-items:center;flex:none;font-size:11px;font-weight:600;letter-spacing:-.2px}
 .jrow .in{flex:1;min-width:0}
 .jrow .nm{font-weight:500}
-.jrow .sb{font-size:12px;color:#a6a6ab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.jrow .kc{font-weight:600;text-align:right;font-size:15px;line-height:1.1}
+.jrow .sb{font-size:13px;line-height:1.35;color:#c4c4c9;margin-top:2px}
+.jrow .kc,.jrow .ok{margin-top:4px}.jrow .kc{font-weight:600;text-align:right;font-size:15px;line-height:1.1}
 .jrow .kc small{display:block;font-size:10px;color:#a6a6ab;font-weight:500}
 .jrow .ok{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;flex:none;transition:transform .14s var(--ease),background .2s}
 .jrow .ok:active{transform:scale(.88)}
@@ -248,10 +240,6 @@ body{--dir:0}
           <div><small>BMI</small><b id="hsBmi">--</b></div>
           <div><small>Còn lại</small><b class="pr" id="hsLeft">--</b></div>
         </div>
-        <div class="acts">
-          <button class="act a1" onclick="goWeight()"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></i>Nhập cân</button>
-          <button class="act a2" onclick="quickCup()">+1 cốc<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 2.5-6.5 6-11z"/></svg></i></button>
-        </div>
       </div>
       <div class="card ga-kpi">
         <div class="kpihead"><h3>Tiến độ mục tiêu</h3><b id="kpiPct">0%</b></div>
@@ -379,9 +367,9 @@ body{--dir:0}
 <div class="veil"></div>
 <nav class="dock" id="dock">
   <div id="pill"></div>
-  <button class="nav on" data-t="home" aria-label="Hôm nay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></button>
-  <button class="nav" data-t="weight" aria-label="Cân nặng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 10a4 4 0 018 0"/><path d="M12 10l2-2"/></svg></button>
+    <button class="nav" data-t="weight" aria-label="Cân nặng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 10a4 4 0 018 0"/><path d="M12 10l2-2"/></svg></button>
   <button class="nav" data-t="meal" aria-label="Ăn uống"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M4 3v5a3 3 0 006 0V3M7 11v10"/><path d="M17 21V3c-2.5 1.5-3.5 4-3.5 7 0 2 1 3 3.5 3"/></svg></button>
+  <button class="nav on" data-t="home" aria-label="Hôm nay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></button>
   <button class="nav" data-t="water" aria-label="Nước"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 2.5-6.5 6-11z"/></svg></button>
   <button class="nav" data-t="workout" aria-label="Tập luyện"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></button>
 </nav>
@@ -442,7 +430,7 @@ function setText(el,v){v=String(v);if(el.textContent!==v){el.textContent=v;el.cl
 function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',4500)}
 
 /* ---------- điều hướng + dock ---------- */
-const TABS=['home','weight','meal','water','workout'];
+const TABS=['weight','meal','home','water','workout'];
 let curTab='home';
 function placePill(){const n=document.querySelector('.dock .nav.on');if(!n)return;$('pill').style.transform='translateX('+(n.offsetLeft+(n.offsetWidth-60)/2)+'px)'}
 function go(t){
