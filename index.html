@@ -2,228 +2,390 @@
 <html lang="vi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#eeeeef">
 <title>Tăng Cân Khỏe</title>
 <style>
-:root{--bg:#f6f7f4;--card:#fff;--ink:#1f2a24;--mut:#6b776f;--pri:#2f9e6b;--pri2:#e6f5ed;--acc:#f59f00;--line:#e4e8e2;--bad:#e03131;--water:#1c7ed6}
-@media(prefers-color-scheme:dark){:root{--bg:#121714;--card:#1b231e;--ink:#eaf1ec;--mut:#93a39a;--pri:#4cc38a;--pri2:#1f3329;--line:#2a352e;--water:#4dabf7}}
+@font-face{font-family:'Gilroy';font-weight:400;src:url(Gilroy-Regular.woff2) format('woff2')}
+@font-face{font-family:'Gilroy';font-weight:500;src:url(Gilroy-Medium.woff2) format('woff2')}
+@font-face{font-family:'Gilroy';font-weight:600;src:url(Gilroy-SemiBold.woff2) format('woff2')}
+@font-face{font-family:'Gilroy';font-weight:700;src:url(Gilroy-Bold.woff2) format('woff2')}
+@font-face{font-family:'Inter';font-weight:100 900;src:url(Inter.woff2) format('woff2');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
+@font-face{font-family:'Inter';font-weight:100 900;src:url(Inter-ext.woff2) format('woff2');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+0300-0301,U+0303-0304,U+0308-0309,U+0323,U+0329,U+1EA0-1EF9,U+20AB}
+
+:root{--ease:cubic-bezier(.22,.8,.24,1);--ink:#111;--black:#141414;--mute:#85858b;--bg:#eeeeef;--paper:#faf8f4;
+ --pri:#2f9e6b;--pri-l:#5fd39a;--water:#1c7ed6;--water-l:#74c0fc;--acc:#f59f00;--line:rgba(0,0,0,.08)}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-bottom:84px}
-.wrap{max-width:720px;margin:0 auto;padding:16px}
-h1{font-size:22px;margin:4px 0 2px}h2{font-size:17px;margin:0 0 10px}
-.sub{color:var(--mut);font-size:14px;margin:0 0 14px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:16px;margin-bottom:14px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.stat{background:var(--pri2);border-radius:12px;padding:10px;text-align:center}
-.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--mut)}
-.bar{height:10px;background:var(--line);border-radius:9px;overflow:hidden}.bar i{display:block;height:100%;background:var(--pri);width:0;transition:width .4s}
-.bar.w i{background:var(--water)}
-button,input,select{font:inherit;color:var(--ink)}
-button{background:var(--pri);color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}
-button.ghost{background:transparent;color:var(--pri);border:1px solid var(--pri)}
-button.sm{padding:5px 10px;font-size:14px}
-input,select{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px;width:100%}
-label{font-size:13px;color:var(--mut);display:block}
-.f{flex:1;min-width:100px}
-nav{position:fixed;bottom:0;left:0;right:0;background:var(--card);border-top:1px solid var(--line);display:flex;justify-content:center}
-nav button{flex:1;max-width:150px;background:none;color:var(--mut);border-radius:0;padding:10px 2px;font-size:11px}
-nav button span{display:block;font-size:20px}nav button.on{color:var(--pri);font-weight:600}
-.tab{display:none}.tab.on{display:block}
-.meal{display:flex;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
-.meal:first-of-type{border-top:0}
-.meal input[type=checkbox]{width:24px;height:24px;accent-color:var(--pri);flex:none}
-.meal .t{font-weight:600;min-width:52px;color:var(--pri)}
-.meal.done .d{text-decoration:line-through;color:var(--mut)}
-.d small{display:block;color:var(--mut)}
-.tag{display:inline-block;background:var(--pri2);color:var(--pri);border-radius:20px;padding:1px 10px;font-size:12px;margin-left:6px;white-space:nowrap}
-.week{display:flex;gap:6px;margin-bottom:12px}
-.week button{flex:1;background:var(--bg);color:var(--ink);border:1px solid var(--line);padding:8px 0;font-size:13px}
-.week button.on{background:var(--pri);color:#fff;border-color:var(--pri)}.week button.rest{opacity:.6}
-.timer{font-size:40px;font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
-.toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:12px 18px;border-radius:12px;display:none;z-index:9;max-width:90%}
-svg{width:100%;height:auto;display:block}
-.hist{display:flex;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);font-size:15px}
-.note{font-size:13px;color:var(--mut);background:var(--bg);border-radius:10px;padding:10px;margin-top:10px}
-.note a{color:var(--pri)}
-/* kcal table */
-.pace{display:block;border:2px solid var(--line);border-radius:12px;padding:10px 12px;margin-bottom:8px;cursor:pointer;color:var(--ink);font-size:15px}
-.pace.on{border-color:var(--pri);background:var(--pri2)}
-.pace .top{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.pace b{font-size:18px}.pace small{display:block;color:var(--mut);font-size:13px}
-/* water */
-.cups{display:grid;grid-template-columns:repeat(auto-fill,minmax(62px,1fr));gap:8px;margin-top:12px}
-.cup{background:var(--bg);border:2px solid var(--line);color:var(--ink);border-radius:12px;padding:8px 2px;text-align:center;line-height:1.2}
-.cup span{display:block;font-size:20px}.cup small{font-size:12px;color:var(--mut)}
-.cup.on{background:var(--water);border-color:var(--water);color:#fff}.cup.on small{color:#fff}
-.cup.late{border-color:var(--acc)}
-/* workout modules */
-.mod{border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px}
-.mod.done{opacity:.6}
-.mod .hd{display:flex;gap:10px;align-items:center;justify-content:space-between}
-.mod ul{margin:8px 0 8px 18px;padding:0;font-size:14px}
-.mod li{margin-bottom:3px}
-.mod .tip{font-size:13px;color:var(--mut)}
+html{background:var(--bg);-webkit-text-size-adjust:100%;text-size-adjust:100%;touch-action:manipulation}
+body::before{content:'';position:fixed;inset:0;z-index:-1;background:url(bg.jpg) center/cover no-repeat;animation:breathe 9s ease-in-out infinite}
+body::after{content:'';position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.07;mix-blend-mode:multiply;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+@keyframes breathe{50%{opacity:.72}}
+body{margin:0;font:14px/1.45 'Gilroy','Inter',-apple-system,sans-serif;color:var(--ink);background:transparent;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit}
+button{cursor:pointer}
+.app{max-width:1100px;margin:0 auto;padding:calc(env(safe-area-inset-top) + 16px) 22px calc(130px + env(safe-area-inset-bottom))}
+svg{display:block}
+
+/* ---------- đầu trang ---------- */
+.top{position:sticky;top:0;z-index:12;display:grid;grid-template-columns:1fr auto 1fr;align-items:center;margin:calc(-1 * (env(safe-area-inset-top) + 16px)) -22px 6px;padding:calc(env(safe-area-inset-top) + 14px) 22px 12px;background:rgba(240,240,242,.5);-webkit-backdrop-filter:blur(20px) saturate(1.3);backdrop-filter:blur(20px) saturate(1.3);border-bottom:1px solid rgba(255,255,255,.55);transition:box-shadow .3s,background .3s}
+.top.scrolled{box-shadow:0 8px 24px rgba(0,0,0,.08);background:rgba(248,247,242,.78)}
+.top #reload{justify-self:start}.top #avatar{justify-self:end}
+.brand{font-size:19px;font-weight:700;letter-spacing:-.5px;display:flex;align-items:center;gap:8px;transition:transform .3s var(--ease)}
+.top.scrolled .brand{transform:scale(.88)}
+.brand i{width:12px;height:12px;border-radius:50%;background:var(--pri);box-shadow:0 0 0 3px rgba(47,158,107,.25)}
+.ibtn{width:48px;height:48px;border-radius:50%;border:0;background:var(--paper);display:grid;place-items:center;position:relative;color:var(--ink);transition:transform .14s var(--ease),background .2s}
+.ibtn:active{transform:scale(.9)}
+.ibtn svg{width:20px;height:20px}
+.ibtn.av{background:var(--black);color:#fff;font-weight:600;font-size:16px}
+.ibtn.spin svg{animation:spin .45s linear}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.title-block{margin:14px 0 16px}
+.title-block h1{font-size:34px;line-height:1.15;letter-spacing:-1px;margin:0;font-weight:700}
+.title-block p{margin:2px 0 0;color:var(--mute);font-size:14px}
+
+/* ---------- thẻ ---------- */
+.card{position:relative;border-radius:32px;padding:22px;background:rgba(250,248,244,.6);-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25);border:1px solid rgba(255,255,255,.7);box-shadow:0 10px 32px rgba(40,40,60,.07),inset 0 1px 0 rgba(255,255,255,.7);min-width:0;transition:transform .14s var(--ease),box-shadow .2s}
+.card.black{background:rgba(20,20,22,.8);color:#fff;border-color:rgba(255,255,255,.12);box-shadow:0 12px 34px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.12)}
+.card h3{margin:0;font-size:19px;font-weight:600;letter-spacing:-.3px}
+.card .sub{font-size:12px;color:var(--mute);margin:0}
+.card.black .sub{color:#a6a6ab}
+.card.tap{cursor:pointer}.card.tap:active{transform:scale(.98)}
+@media(hover:hover){.card.tap:hover,.mini:hover{transform:translateY(-3px);box-shadow:0 16px 36px rgba(40,40,60,.13),inset 0 1px 0 rgba(255,255,255,.7)}}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.stack{display:grid;gap:16px;max-width:760px;margin:0 auto}
+.tag{display:inline-block;background:rgba(0,0,0,.07);border-radius:999px;padding:3px 11px;font-size:12px;font-weight:500;white-space:nowrap}
+.card.black .tag,.tag.w{background:rgba(255,255,255,.14);color:#fff}
+.tag.g{background:rgba(47,158,107,.16);color:#1d6e48}
+.tag.b{background:rgba(28,126,214,.16);color:#1864ab}
+
+/* ---------- trang chủ ---------- */
+.home{display:grid;gap:16px;grid-template-columns:1.1fr 1fr;align-items:start;grid-template-areas:"hero kpi" "meals pair"}
+.ga-hero{grid-area:hero}.ga-kpi{grid-area:kpi}.ga-meals{grid-area:meals}.ga-pair{grid-area:pair}
+@media(max-width:820px){.home{grid-template-columns:1fr;grid-template-areas:"hero" "kpi" "meals" "pair"}}
+.hero{padding:24px 18px 20px;text-align:center}
+.hero .lbl{color:var(--mute);font-size:15px}
+.hero .val{font-size:60px;font-weight:700;letter-spacing:-3px;line-height:1.1;margin:4px 0 4px}
+.hero .val .u{font-size:22px;letter-spacing:0;font-weight:600;color:var(--mute);margin-left:4px}
+.hero .delta{font-size:14px;font-weight:600;margin-bottom:14px}
+.up{color:#1f9d55}.dn{color:#d93025}
+.hstrip{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);padding-top:12px;text-align:center}
+.hstrip>div{display:grid;gap:2px}.hstrip>div+div{border-left:1px solid var(--line)}
+.hstrip small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);font-weight:500}
+.hstrip b{font-size:20px;font-weight:600;letter-spacing:-.5px}
+.hstrip .pr{color:var(--pri)}.hstrip .wt{color:var(--water)}
+.acts{display:flex;margin-top:20px}
+.act{flex:1;height:68px;border-radius:34px;display:flex;align-items:center;gap:12px;padding:0 10px;border:0;font-weight:500;font-size:15px;color:var(--ink);background:var(--paper)}
+.act i{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;flex:none}
+.act svg{width:20px;height:20px}
+.act.a1{box-shadow:inset 0 0 0 2px var(--black);position:relative;z-index:1;margin-right:-20px}
+.act.a1 i{box-shadow:inset 0 0 0 2px var(--black)}
+.act.a2{padding-left:34px;justify-content:space-between}
+.act.a2 i{background:var(--black);color:#fff}
+.kpihead{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:12px}
+.kpihead b{color:var(--pri);font-size:20px;letter-spacing:-.5px}
+.kpibar{--n:20;height:16px;background:rgba(0,0,0,.1);-webkit-mask:repeating-linear-gradient(90deg,#000 0 calc(100% / var(--n) - 3px),transparent calc(100% / var(--n) - 3px) calc(100% / var(--n)));mask:repeating-linear-gradient(90deg,#000 0 calc(100% / var(--n) - 3px),transparent calc(100% / var(--n) - 3px) calc(100% / var(--n)))}
+.kpibar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pri),var(--pri-l));transition:width .8s var(--ease)}
+.kpibar.w i{background:linear-gradient(90deg,var(--water),var(--water-l))}
+.kpisub{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);margin-top:10px}
+.kpisub b{color:var(--ink);font-weight:600}
+.pair2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.mini{border-radius:28px;padding:18px;cursor:pointer;min-height:150px;display:flex;flex-direction:column;position:relative;background:rgba(250,248,244,.6);-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25);border:1px solid rgba(255,255,255,.7);box-shadow:0 10px 32px rgba(40,40,60,.07),inset 0 1px 0 rgba(255,255,255,.7);transition:transform .14s var(--ease),box-shadow .2s}
+.mini:active{transform:scale(.97)}
+.mini .mt{display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:500}
+.mini .mt i{width:34px;height:34px;border-radius:50%;background:var(--black);color:#fff;display:grid;place-items:center}
+.mini .mt svg{width:16px;height:16px}
+.mini .mn{font-size:24px;font-weight:600;letter-spacing:-.6px;margin-top:auto}
+.mini small{color:rgba(0,0,0,.55);font-size:12px}
+.mini .kpibar{height:8px;margin-top:10px}
+
+/* ---------- hàng danh sách đen ---------- */
+.jrow{display:flex;align-items:center;gap:12px;padding:12px;border-radius:24px;background:#262628;margin-top:8px;transition:opacity .25s}
+.jrow.done{opacity:.55}
+.jrow .ic{width:44px;height:44px;border-radius:50%;background:#3a3a3d;display:grid;place-items:center;flex:none;font-size:11px;font-weight:600;letter-spacing:-.2px}
+.jrow .in{flex:1;min-width:0}
+.jrow .nm{font-weight:500}
+.jrow .sb{font-size:12px;color:#a6a6ab;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.jrow .kc{font-weight:600;text-align:right;font-size:15px;line-height:1.1}
+.jrow .kc small{display:block;font-size:10px;color:#a6a6ab;font-weight:500}
+.jrow .ok{width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(255,255,255,.3);background:rgba(255,255,255,.08);color:#fff;display:grid;place-items:center;flex:none;transition:transform .14s var(--ease),background .2s}
+.jrow .ok:active{transform:scale(.88)}
+.jrow .ok svg{width:16px;height:16px;opacity:.35}
+.jrow.done .ok{background:var(--pri);border-color:var(--pri)}.jrow.done .ok svg{opacity:1}
+.jrow.done .nm{text-decoration:line-through}
+.sec{margin-bottom:6px}
+
+/* ---------- nút & form ---------- */
+.btn{border:0;border-radius:999px;padding:12px 20px;font-weight:600;color:#fff;background-color:#141414;background-image:linear-gradient(180deg,#2c2c2f,#111);box-shadow:0 5px 12px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.2);transition:transform .14s var(--ease)}
+.btn:active{transform:scale(.95)}
+.btn.ghost{background:var(--paper);background-image:none;color:var(--ink);box-shadow:inset 0 0 0 1.5px rgba(0,0,0,.14)}
+.btn.sm{padding:8px 14px;font-size:13px}
+.qbtn{width:36px;height:36px;border-radius:50%;border:0;background:rgba(0,0,0,.06);display:grid;place-items:center;color:var(--ink);flex:none;transition:transform .14s var(--ease),background .2s,color .2s}
+.qbtn:active{transform:scale(.88)}
+.qbtn svg{width:16px;height:16px}
+.qbtn.go{background-color:#141414;background-image:linear-gradient(180deg,#2c2c2f,#111);color:#fff;box-shadow:0 5px 12px rgba(0,0,0,.2),inset 0 1px 0 rgba(255,255,255,.2)}
+.qbtn.on{background:var(--pri);color:#fff}
+.tools{display:flex;gap:10px;margin:0 0 16px}
+.pill{height:56px;border-radius:999px;border:1px solid rgba(255,255,255,.7);background:rgba(250,248,244,.66);-webkit-backdrop-filter:blur(18px) saturate(1.25);backdrop-filter:blur(18px) saturate(1.25);display:flex;align-items:center;padding:0 8px 0 20px;gap:8px;flex:1;min-width:0}
+.pill input{border:0;outline:0;background:transparent;width:100%;min-width:0;font-size:18px;font-weight:600}
+.pill .u{color:var(--mute);font-weight:500}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fld{display:grid;gap:4px;font-size:12px;color:var(--mute)}.fld.wide{grid-column:1/-1}
+.fld input,.fld select{font-size:14px;color:var(--ink);padding:11px 15px;border:1px solid #e3e3e6;border-radius:16px;outline:0;background:rgba(255,255,255,.7);width:100%}
+.fld input:focus,.fld select:focus{border-color:var(--black);background:#fff}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button,.jt button{border:0;border-radius:999px;padding:9px 15px;font-size:13px;background:rgba(250,248,244,.66);color:var(--ink);transition:transform .12s,background .2s}
+.chips button.on{background:linear-gradient(180deg,#2a2a2d,#111);color:#fff;box-shadow:0 6px 14px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.18)}
+.jt{display:flex;gap:6px;flex-wrap:wrap}
+.jt button{background:rgba(255,255,255,.1);color:#fff}
+.jt button:active{background:#fff;color:var(--ink)}
+.sw{width:56px;height:32px;border-radius:999px;border:0;background:rgba(0,0,0,.14);position:relative;flex:none;transition:background .25s}
+.sw i{position:absolute;top:3px;left:3px;width:26px;height:26px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .3s var(--ease)}
+.sw.on{background:var(--black)}.sw.on i{transform:translateX(24px)}
+.rowflex{display:flex;align-items:center;justify-content:space-between;gap:14px}
+.rowflex b{font-size:16px;font-weight:600}
+.note{font-size:12.5px;color:var(--mute);line-height:1.55}
+.note a{color:var(--ink);text-decoration:underline}
+.stat3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}
+.cnt b{display:block;font-size:26px;font-weight:600;letter-spacing:-1px}
+.cnt span{font-size:12px;color:var(--mute)}
+.hist{display:flex;justify-content:space-between;align-items:center;padding:11px 0;border-top:1px solid var(--line);font-size:14px}
+.hist:first-of-type{border-top:0}
+.hist small{margin-left:6px;font-weight:600}
+
+/* mốc kcal */
+.pace .pn{font-size:38px;font-weight:700;letter-spacing:-1.5px;margin:6px 0 2px}
+.pace .pn small{font-size:14px;font-weight:500;letter-spacing:0;color:var(--mute)}
+.card.black.pace .pn small{color:#a6a6ab}
+.pace .sub+.sub{margin-top:2px}
+
+/* nước */
+.cups{display:grid;grid-template-columns:repeat(auto-fill,minmax(64px,1fr));gap:8px;margin-top:14px}
+.cc{aspect-ratio:1;border:0;border-radius:18px;background:#262628;color:#fff;display:grid;place-items:center;align-content:center;gap:2px;font-weight:600;font-size:12px;transition:transform .14s var(--ease),background .25s}
+.cc:active{transform:scale(.9)}
+.cc svg{width:20px;height:20px;opacity:.7}
+.cc.on{background:linear-gradient(160deg,var(--water),#1971c2);box-shadow:0 6px 14px rgba(28,126,214,.35)}
+.cc.on svg{opacity:1}
+.cc.late{box-shadow:inset 0 0 0 2px var(--acc)}
+.legend{display:flex;gap:14px;font-size:12px;color:#a6a6ab;margin-top:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;vertical-align:-1px}
+
+/* tập luyện */
+.wk{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-top:16px}
+.wd{border:0;background:none;color:#fff;display:grid;justify-items:center;gap:6px;padding:4px 0;position:relative}
+.wd small{font-size:11px;color:#a6a6ab;letter-spacing:.04em}
+.wd b{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-size:15px;font-weight:600;transition:background .3s,color .3s,box-shadow .3s}
+.wd.rest b{color:#a6a6ab}
+.wd.today b{box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.5)}
+.wd.on b{background:linear-gradient(180deg,#fff,#d4d4d9);color:#111;box-shadow:0 4px 12px rgba(255,255,255,.2)}
+.wd i{width:5px;height:5px;border-radius:50%;background:transparent}
+.wd i.has{background:var(--pri-l)}
+.mrow{border-radius:24px;background:rgba(255,255,255,.7);border:1px solid rgba(255,255,255,.8);margin-top:10px;overflow:hidden;transition:opacity .25s}
+.mrow.done{opacity:.6}
+.mh{display:flex;align-items:center;gap:12px;padding:12px;cursor:pointer}
+.mh .mi{width:44px;height:44px;border-radius:50%;background:var(--black);color:#fff;display:grid;place-items:center;font-weight:600;flex:none}
+.mh .in{flex:1;min-width:0}
+.mh .nm{font-weight:600}.mh .sb{font-size:12px;color:var(--mute)}
+.mb{display:none;padding:0 16px 14px 68px;font-size:13px}
+.mrow.open .mb{display:block;animation:rise .45s var(--ease)}
+.mb ul{margin:0 0 6px;padding-left:18px}.mb li{margin-bottom:3px}
+.mb .tip{color:var(--mute);font-size:12.5px}
+.timer{font-size:60px;font-weight:700;letter-spacing:-3px;text-align:center;font-variant-numeric:tabular-nums;line-height:1.1;margin:8px 0 12px}
+.timer-l{text-align:center}
+
+/* ---------- dock ---------- */
+.veil{position:fixed;left:0;right:0;bottom:0;height:calc(92px + env(safe-area-inset-bottom) * .3);z-index:14;pointer-events:none;-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);background:linear-gradient(to top,rgba(240,240,242,.5) 0,rgba(240,240,242,.35) 70%,rgba(240,240,242,0) 100%);-webkit-mask-image:linear-gradient(to top,#000 82%,transparent 100%);mask-image:linear-gradient(to top,#000 82%,transparent 100%)}
+.dock{position:fixed;left:50%;bottom:calc(6px + env(safe-area-inset-bottom) * .3);transform:translateX(-50%);width:min(calc(100% - 20px),400px);height:78px;background:rgba(20,20,22,.7);-webkit-backdrop-filter:blur(24px) saturate(1.5);backdrop-filter:blur(24px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-radius:39px;padding:9px;display:flex;z-index:15;box-shadow:0 16px 36px rgba(0,0,0,.25),inset 0 1px 0 rgba(255,255,255,.18)}
+.dock .nav{flex:1;height:60px;border:0;background:none;color:#fff;border-radius:50%;position:relative;z-index:1;display:grid;place-items:center;transition:color .45s var(--ease),transform .12s}
+.dock .nav:active{transform:scale(.92)}
+.dock .nav.on{color:var(--black)}
+.dock .nav svg{width:25px;height:25px;stroke-width:1.75}
+#pill{position:absolute;left:0;top:9px;width:60px;height:60px;border-radius:50%;background:#fff;z-index:0;pointer-events:none;transition:transform .7s var(--ease);box-shadow:0 0 26px rgba(255,255,255,.28),0 6px 14px rgba(0,0,0,.25)}
+#pill::before{content:'';position:absolute;left:50%;top:-9px;width:34px;height:4px;margin-left:-17px;border-radius:0 0 4px 4px;background:#fff;box-shadow:0 0 14px 3px rgba(255,255,255,.55)}
+#pill::after{content:'';position:absolute;left:50%;top:-5px;width:76px;height:36px;margin-left:-38px;background:linear-gradient(to bottom,rgba(255,255,255,.28),rgba(255,255,255,0));clip-path:polygon(35% 0,65% 0,100% 100%,0 100%);pointer-events:none;z-index:-1}
+
+/* ---------- chuyển động ---------- */
+body{--dir:0}
+.tab{display:none}
+.tab.on{display:block;animation:slidein .6s var(--ease)}
+@keyframes slidein{from{transform:translateX(calc(var(--dir) * 38px))}}
+@keyframes rise{from{opacity:0;transform:translateY(26px) scale(.97)}}
+.tab.on .card,.tab.on .tools,.tab.on .mini{animation:rise .85s var(--ease) backwards;animation-delay:calc(var(--i,0) * 90ms)}
+.bump{animation:bump .5s var(--ease)}
+@keyframes bump{35%{transform:scale(1.07);color:var(--pri)}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.001ms!important;animation-delay:0ms!important;transition-duration:.001ms!important}}
+
+.toast{position:fixed;top:calc(env(safe-area-inset-top) + 72px);left:50%;transform:translateX(-50%);background:var(--black);color:#fff;padding:12px 18px;border-radius:999px;display:none;z-index:30;max-width:90%;font-size:13px;font-weight:500;box-shadow:0 10px 28px rgba(0,0,0,.25)}
 </style>
 </head>
-<body>
+<body data-tab="home">
 <div class="toast" id="toast"></div>
-<div class="wrap">
+<div class="app">
+  <header class="top" id="top">
+    <button class="ibtn" id="reload" aria-label="Tải lại"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 4v7h-7"/></svg></button>
+    <div class="brand"><i></i>Tăng Cân Khỏe</div>
+    <button class="ibtn av" id="avatar" aria-label="Thông tin cá nhân">K</button>
+  </header>
 
-<!-- HÔM NAY -->
-<section class="tab on" id="t-home">
-  <h1 id="hello">Chào buổi sáng 👋</h1>
-  <p class="sub" id="today"></p>
-  <div class="card">
-    <div class="grid">
-      <div class="stat"><b id="sCur">--</b><span>Cân nặng (kg)</span></div>
-      <div class="stat"><b id="sGoal">--</b><span>Mục tiêu (kg)</span></div>
-      <div class="stat"><b id="sBmi">--</b><span>BMI</span></div>
+  <main id="main">
+  <!-- HÔM NAY -->
+  <section class="tab on" id="t-home">
+    <div class="title-block"><h1 id="hello">Chào buổi sáng</h1><p id="today"></p></div>
+    <div class="home">
+      <div class="card hero ga-hero">
+        <div class="lbl">Cân nặng hiện tại</div>
+        <div class="val"><span id="heroVal">--</span><span class="u">kg</span></div>
+        <div class="delta" id="heroDelta"></div>
+        <div class="hstrip">
+          <div><small>Mục tiêu</small><b id="hsGoal">--</b></div>
+          <div><small>BMI</small><b id="hsBmi">--</b></div>
+          <div><small>Còn lại</small><b class="pr" id="hsLeft">--</b></div>
+        </div>
+        <div class="acts">
+          <button class="act a1" onclick="goWeight()"><i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14"/></svg></i>Nhập cân</button>
+          <button class="act a2" onclick="quickCup()">+1 cốc<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 2.5-6.5 6-11z"/></svg></i></button>
+        </div>
+      </div>
+      <div class="card ga-kpi">
+        <div class="kpihead"><h3>Tiến độ mục tiêu</h3><b id="kpiPct">0%</b></div>
+        <div class="kpibar"><i id="kpiBar"></i></div>
+        <div class="kpisub"><span id="kpiL"></span><span id="kpiR"></span></div>
+      </div>
+      <div class="card black ga-meals">
+        <div class="card-top"><h3>Bữa ăn hôm nay</h3><span class="tag" id="kcalTag"></span></div>
+        <div id="homeMeals"></div>
+      </div>
+      <div class="pair2 ga-pair">
+        <div class="mini" onclick="go('water')">
+          <div class="mt">Nước uống<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 2.5-6.5 6-11z"/></svg></i></div>
+          <div class="mn" id="miniW">--</div><small id="miniWs"></small>
+          <div class="kpibar w" id="miniWbar"><i></i></div>
+        </div>
+        <div class="mini" onclick="go('workout')">
+          <div class="mt">Tập luyện<i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></i></div>
+          <div class="mn" id="miniT">--</div><small id="miniTs"></small>
+          <div class="kpibar" id="miniTbar"><i></i></div>
+        </div>
+      </div>
     </div>
-    <div style="margin-top:14px"><div class="row" style="justify-content:space-between"><small id="progTxt">Tiến độ</small><small id="progPct"></small></div><div class="bar"><i id="prog"></i></div></div>
-  </div>
-  <div class="card">
-    <h2>🍽️ Bữa ăn hôm nay <span class="tag" id="kcalTag"></span></h2>
-    <div id="homeMeals"></div>
-  </div>
-  <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <div><h2 style="margin:0">💧 Nước uống</h2><small class="sub" id="waterTxt"></small></div>
-      <div class="row"><button class="ghost sm" onclick="go('water')">Bảng nước</button><button class="sm" onclick="quickCup()">+ 1 cốc</button></div>
-    </div>
-    <div class="bar w" style="margin-top:10px"><i id="homeWBar"></i></div>
-  </div>
-  <div class="card">
-    <h2>💪 Tập luyện hôm nay</h2>
-    <p id="homeWorkout" class="sub"></p>
-    <button onclick="go('workout')">Xem bài tập</button>
-  </div>
-</section>
+  </section>
 
-<!-- CÂN NẶNG -->
-<section class="tab" id="t-weight">
-  <h1>Theo dõi cân nặng</h1><p class="sub">Cân vào buổi sáng, sau khi đi vệ sinh, trước khi ăn.</p>
-  <div class="card">
-    <div class="row">
-      <div class="f"><label>Cân hôm nay (kg)</label><input id="wIn" type="number" step="0.1" inputmode="decimal" placeholder="vd 52.4"></div>
-      <div class="f" style="flex:0"><label>&nbsp;</label><button onclick="addWeight()">Lưu</button></div>
+  <!-- CÂN NẶNG -->
+  <section class="tab" id="t-weight">
+    <div class="title-block"><h1>Cân nặng</h1><p>Cân buổi sáng, sau khi đi vệ sinh, trước khi ăn.</p></div>
+    <div class="stack">
+      <div class="tools"><label class="pill"><input id="wIn" type="number" step="0.1" inputmode="decimal" placeholder="Cân hôm nay"><span class="u">kg</span><button class="qbtn go" style="width:42px;height:42px" onclick="addWeight()" aria-label="Lưu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg></button></label></div>
+      <div class="card">
+        <div class="stat3" style="margin-bottom:14px">
+          <div class="cnt"><b id="wsCur">--</b><span>Hiện tại (kg)</span></div>
+          <div class="cnt"><b id="wsDelta">--</b><span>Thay đổi (kg)</span></div>
+          <div class="cnt"><b id="wsBmi">--</b><span>BMI</span></div>
+        </div>
+        <div id="chart"></div><p class="note" id="chartNote" style="margin:8px 0 0"></p>
+      </div>
+      <div class="card"><h3 style="margin-bottom:6px">Lịch sử</h3><div id="hist"></div></div>
+      <div class="card" id="profileCard">
+        <h3 style="margin-bottom:14px">Thông tin cá nhân</h3>
+        <div class="form-grid">
+          <label class="fld"><span>Chiều cao (cm)</span><input id="pH" type="number"></label>
+          <label class="fld"><span>Tuổi</span><input id="pA" type="number"></label>
+          <label class="fld"><span>Giới tính</span><select id="pS"><option value="m">Nam</option><option value="f">Nữ</option></select></label>
+          <label class="fld"><span>Mục tiêu (kg)</span><input id="pG" type="number" step="0.5"></label>
+          <label class="fld wide"><span>Mức vận động hằng ngày</span><select id="pAct"><option value="1.2">Ngồi nhiều, ít vận động (×1.2)</option><option value="1.375">Nhẹ: tập 1–3 buổi/tuần (×1.375)</option><option value="1.55">Vừa: tập 3–5 buổi/tuần (×1.55)</option></select></label>
+        </div>
+        <div class="chips" style="margin-top:14px"><button class="on" onclick="saveProfile()">Lưu thông tin</button><button onclick="demoData()">Nạp dữ liệu mẫu</button><button onclick="resetAll()">Xóa hết</button></div>
+      </div>
     </div>
-  </div>
-  <div class="card"><h2>Biểu đồ</h2><div id="chart"></div><p class="sub" id="chartNote" style="margin:8px 0 0"></p></div>
-  <div class="card"><h2>Lịch sử</h2><div id="hist"></div></div>
-  <div class="card">
-    <h2>Thông tin cá nhân</h2>
-    <div class="row">
-      <div class="f"><label>Chiều cao (cm)</label><input id="pH" type="number"></div>
-      <div class="f"><label>Tuổi</label><input id="pA" type="number"></div>
-      <div class="f"><label>Giới tính</label><select id="pS"><option value="m">Nam</option><option value="f">Nữ</option></select></div>
-      <div class="f"><label>Mục tiêu (kg)</label><input id="pG" type="number" step="0.5"></div>
-    </div>
-    <div style="margin-top:10px"><label>Mức vận động hằng ngày</label>
-      <select id="pAct"><option value="1.2">Ngồi nhiều, ít vận động (×1.2)</option><option value="1.375">Nhẹ: tập 1–3 buổi/tuần (×1.375)</option><option value="1.55">Vừa: tập 3–5 buổi/tuần (×1.55)</option></select></div>
-    <div class="row" style="margin-top:10px"><button onclick="saveProfile()">Lưu thông tin</button><button class="ghost" onclick="demoData()">Nạp dữ liệu mẫu</button><button class="ghost" onclick="resetAll()">Xóa hết</button></div>
-  </div>
-</section>
+  </section>
 
-<!-- ĂN UỐNG -->
-<section class="tab" id="t-meal">
-  <h1>Ăn uống &amp; kcal bổ sung</h1><p class="sub">Chọn tốc độ tăng cân. Bảng tính theo cân nặng hiện tại của bạn.</p>
-  <div class="card">
-    <h2>Mốc kcal mỗi ngày</h2>
-    <div id="paces"></div>
-    <div class="note" id="kcalNote"></div>
-  </div>
-  <div class="card">
-    <h2>Đạm (protein) mỗi ngày</h2>
-    <div id="protein"></div>
-    <div class="note">Chia đều đạm vào các bữa (khoảng cách 3–4 giờ) theo ISSN. Đạm từ trứng, sữa, thịt, cá, đậu phụ.</div>
-  </div>
-  <div class="card">
-    <div class="row" style="justify-content:space-between">
-      <div><b>🔔 Nhắc đúng giờ ăn</b><div class="sub" style="margin:0">Cần để tab mở. Bấm bật để cho phép thông báo.</div></div>
-      <button id="remBtn" onclick="toggleRemind()">Bật</button>
+  <!-- ĂN UỐNG -->
+  <section class="tab" id="t-meal">
+    <div class="title-block"><h1>Ăn uống</h1><p>Chọn mốc kcal bổ sung. Tính theo cân nặng hiện tại.</p></div>
+    <div class="stack">
+      <div id="paces" style="display:grid;gap:12px"></div>
+      <div class="card"><p class="note" id="kcalNote" style="margin:0"></p></div>
+      <div class="card"><h3 style="margin-bottom:12px">Đạm mỗi ngày</h3><div id="protein"></div>
+        <p class="note" style="margin:12px 0 0">Chia đều đạm vào các bữa (cách nhau 3–4 giờ) theo ISSN. Nguồn đạm: trứng, sữa, thịt, cá, đậu phụ.</p></div>
+      <div class="card"><div class="rowflex"><div><b>Nhắc đúng giờ ăn</b><p class="sub">Cần để tab mở, bật để cho phép thông báo.</p></div><button class="sw" id="remSw" onclick="toggleRemind()" aria-label="Bật nhắc ăn"><i></i></button></div></div>
+      <div class="card black"><h3>Thực đơn 6 bữa</h3><p class="sub">Kcal từng bữa theo mốc đã chọn.</p><div id="mealList"></div>
+        <p class="sub" style="margin-top:14px">Mẹo: thêm 1 thìa dầu ô liu hoặc bơ đậu phộng, uống sữa nguyên kem, ăn chuối, yến mạch, khoai lang để thêm calo mà không ngán. Khẩu phần ghi là gợi ý, chỉnh để tổng kcal gần mốc.</p></div>
+      <div class="card"><h3 style="margin-bottom:8px">Cơ sở khuyến nghị</h3>
+        <p class="note" style="margin:0">
+        • NHS Anh: người lớn tăng cân dần bằng cách thêm khoảng 300–500 kcal/ngày, kết hợp tập sức mạnh. <a href="https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/healthy-ways-to-gain-weight/" target="_blank" rel="noopener">NHS</a><br>
+        • Mốc nhẹ +250 kcal lấy từ các hướng dẫn tăng cơ thông dụng (khoảng 250–500 kcal), chưa phải nguồn y khoa chính thức.<br>
+        • Đạm 1.4–2.0 g/kg/ngày: <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener">ISSN Position Stand</a><br>
+        • Mifflin-St Jeor × hệ số vận động chỉ là ước tính, có thể lệch 10–15%. Hãy cân đều và chỉnh mốc sau 2 tuần nếu không tăng như dự kiến.<br>
+        • Quy đổi ~7700 kcal ≈ 1 kg là ước tính thông dụng.<br>
+        • BMI dưới 16, sụt cân không rõ lý do hoặc chán ăn kéo dài: hãy đi khám.</p></div>
     </div>
-  </div>
-  <div class="card"><h2>Thực đơn 6 bữa (kcal theo mốc đã chọn)</h2><div id="mealList"></div>
-    <div class="note">Mẹo: thêm 1 thìa dầu ô liu hoặc bơ đậu phộng, uống sữa nguyên kem, ăn chuối, yến mạch, khoai lang để thêm calo mà không bị ngán. Khẩu phần ghi là gợi ý, hãy điều chỉnh để tổng kcal gần với mốc.</div>
-  </div>
-  <div class="card"><h2>Cơ sở khuyến nghị</h2>
-    <div class="note" style="margin-top:0">
-      • NHS Anh: người lớn tăng cân dần bằng cách thêm khoảng 300–500 kcal/ngày, kết hợp tập sức mạnh. <a href="https://www.nhs.uk/live-well/healthy-weight/managing-your-weight/healthy-ways-to-gain-weight/" target="_blank" rel="noopener">NHS</a><br>
-      • Mốc nhẹ +250 kcal lấy từ các hướng dẫn tăng cơ thông dụng (khoảng 250–500 kcal), chưa phải nguồn y khoa chính thức.<br>
-      • Đạm 1.4–2.0 g/kg/ngày: ISSN. <a href="https://pubmed.ncbi.nlm.nih.gov/28642676/" target="_blank" rel="noopener">ISSN Position Stand</a><br>
-      • Công thức Mifflin-St Jeor × hệ số vận động chỉ là ước tính, có thể lệch 10–15%. Hãy cân đều và chỉnh mốc sau 2 tuần nếu không tăng như dự kiến.<br>
-      • Quy đổi ~7700 kcal ≈ 1 kg là ước tính thông dụng; thực tế còn phụ thuộc cơ thể.<br>
-      • Nếu BMI dưới 16, sút cân không rõ lý do hoặc chán ăn kéo dài, hãy đi khám.
-    </div>
-  </div>
-</section>
+  </section>
 
-<!-- NƯỚC -->
-<section class="tab" id="t-water">
-  <h1>Bảng nước uống</h1><p class="sub">Mỗi ô là 1 cốc 100 ml. Uống xong bấm vào ô để tick.</p>
-  <div class="card">
-    <div class="grid">
-      <div class="stat"><b id="wCups">--</b><span>Cốc cần uống</span></div>
-      <div class="stat"><b id="wMl">--</b><span>ml / ngày</span></div>
-      <div class="stat"><b id="wDone">--</b><span>Đã uống</span></div>
+  <!-- NƯỚC -->
+  <section class="tab" id="t-water">
+    <div class="title-block"><h1>Nước uống</h1><p>Mỗi ô là 1 cốc 100 ml. Uống xong bấm vào ô để tick.</p></div>
+    <div class="stack">
+      <div class="card hero">
+        <div class="lbl">Đã uống hôm nay</div>
+        <div class="val"><span id="wHeroVal">--</span><span class="u" id="wHeroU"></span></div>
+        <div class="delta" id="wStatus"></div>
+        <div class="kpibar w" id="wBarWrap" style="margin-bottom:16px"><i id="wBar"></i></div>
+        <div class="hstrip">
+          <div><small>Nhu cầu</small><b id="wsNeed">--</b></div>
+          <div><small>Đã uống</small><b class="wt" id="wsDrunk">--</b></div>
+          <div><small>Còn lại</small><b id="wsLeft">--</b></div>
+        </div>
+      </div>
+      <div class="card black">
+        <div class="card-top"><h3>Lịch uống 07:30 → 22:00</h3><span class="tag" id="cupTag"></span></div>
+        <div class="cups" id="cups"></div>
+        <div class="legend"><span><i style="background:#262628;box-shadow:inset 0 0 0 1px #555"></i>Chưa tới giờ</span><span><i style="background:var(--water)"></i>Đã uống</span><span><i style="box-shadow:inset 0 0 0 2px var(--acc)"></i>Quá giờ</span></div>
+      </div>
+      <div class="card"><div class="rowflex"><div><b>Nhắc uống nước</b><p class="sub">Thông báo từng cốc đúng giờ (cần để tab mở).</p></div><button class="sw" id="remWSw" onclick="toggleRemindW()" aria-label="Bật nhắc uống nước"><i></i></button></div></div>
+      <div class="card"><h3 style="margin-bottom:8px">Cách tính</h3><p class="note" id="wNote" style="margin:0"></p></div>
     </div>
-    <div class="bar w" style="margin-top:14px"><i id="wBar"></i></div>
-    <p class="sub" id="wStatus" style="margin:8px 0 0"></p>
-  </div>
-  <div class="card">
-    <h2>Lịch uống 07:30 → 22:00</h2>
-    <div class="cups" id="cups"></div>
-    <div class="row" style="justify-content:space-between;margin-top:14px">
-      <div><b>🔔 Nhắc uống nước</b><div class="sub" style="margin:0">Thông báo từng cốc đúng giờ (cần để tab mở).</div></div>
-      <button id="remWBtn" onclick="toggleRemindW()">Bật</button>
-    </div>
-  </div>
-  <div class="card"><h2>Cách tính</h2>
-    <div class="note" style="margin-top:0" id="wNote"></div>
-  </div>
-</section>
+  </section>
 
-<!-- TẬP LUYỆN -->
-<section class="tab" id="t-workout">
-  <h1>Tập nhẹ tại nhà</h1><p class="sub">Mỗi bài 5–10 phút, ghép 2–3 bài mỗi buổi. Không cần dụng cụ.</p>
-  <div class="week" id="week"></div>
-  <div class="card">
-    <h2 id="wTitle"></h2><p class="sub" id="wDesc"></p>
-    <div id="modList"></div>
-  </div>
-  <div class="card">
-    <h2>⏱️ Đồng hồ</h2>
-    <p class="sub" id="timerLbl" style="text-align:center;margin:0 0 4px">Nghỉ giữa hiệp</p>
-    <div class="timer" id="timer">1:00</div>
-    <div class="row" style="justify-content:center;margin-top:10px">
-      <button class="ghost sm" onclick="startTimer(45,'Nghỉ giữa hiệp')">45s</button><button class="ghost sm" onclick="startTimer(60,'Nghỉ giữa hiệp')">60s</button><button class="ghost sm" onclick="startTimer(90,'Nghỉ giữa hiệp')">90s</button><button class="ghost sm" onclick="stopTimer()">Dừng</button>
+  <!-- TẬP LUYỆN -->
+  <section class="tab" id="t-workout">
+    <div class="title-block"><h1>Tập luyện</h1><p>Bài nhẹ tại nhà, mỗi bài 5–10 phút, không cần dụng cụ.</p></div>
+    <div class="stack">
+      <div class="card black"><div class="card-top"><h3 id="wkMonth">Tuần này</h3><span class="tag" id="wkTag"></span></div><div class="wk" id="week"></div></div>
+      <div class="card">
+        <h3 id="wTitle"></h3><p class="sub" id="wDesc"></p>
+        <div id="modList"></div>
+      </div>
+      <div class="card black">
+        <p class="sub timer-l" id="timerLbl">Nghỉ giữa hiệp</p>
+        <div class="timer" id="timer">1:00</div>
+        <div class="jt" style="justify-content:center"><button onclick="startTimer(45,'Nghỉ giữa hiệp')">45s</button><button onclick="startTimer(60,'Nghỉ giữa hiệp')">60s</button><button onclick="startTimer(90,'Nghỉ giữa hiệp')">90s</button><button onclick="stopTimer()">Dừng</button></div>
+      </div>
+      <div class="card"><h3 style="margin-bottom:8px">Lưu ý</h3><p class="note" style="margin:0">
+        • Tăng tiến chậm: khi làm đủ số lần ở mọi hiệp một cách dễ dàng, buổi sau thêm 1–2 lần hoặc hạ chậm hơn. Sau 2–3 tuần mới thêm hiệp.<br>
+        • Nên có ít nhất 2 ngày/tuần tập tăng cơ (WHO 2020 khuyến nghị vận động tăng cơ đều đặn cho người lớn). Lịch trên có 4 ngày.<br>
+        • Dừng lại nếu đau nhói, chóng mặt, tức ngực. Có bệnh tim, khớp, huyết áp thì hỏi bác sĩ trước.<br>
+        • Ngủ 7–8 tiếng và ăn đủ kcal mới tăng cơ được.</p></div>
     </div>
-  </div>
-  <div class="card"><h2>Lưu ý</h2>
-    <div class="note" style="margin-top:0">
-      • Tăng tiến chậm: khi làm đủ số lần ở mọi hiệp một cách dễ dàng, buổi sau thêm 1–2 lần hoặc hạ chậm hơn. Sau 2–3 tuần mới thêm hiệp.<br>
-      • Nên có ít nhất 2 ngày/tuần tập tăng cơ (WHO 2020 khuyến nghị vận động tăng cơ đều đặn cho người lớn). Lịch trên có 4 ngày.<br>
-      • Dừng lại nếu đau nhói, chóng mặt, tức ngực. Có bệnh tim, khớp, huyết áp thì hỏi bác sĩ trước.<br>
-      • Ngủ 7–8 tiếng và ăn đủ kcal mới tăng cơ được.
-    </div>
-  </div>
-</section>
-
+  </section>
+  </main>
 </div>
 
-<nav>
-  <button data-t="home" class="on"><span>🏠</span>Hôm nay</button>
-  <button data-t="weight"><span>⚖️</span>Cân nặng</button>
-  <button data-t="meal"><span>🍽️</span>Ăn uống</button>
-  <button data-t="water"><span>💧</span>Nước</button>
-  <button data-t="workout"><span>💪</span>Tập luyện</button>
+<div class="veil"></div>
+<nav class="dock" id="dock">
+  <div id="pill"></div>
+  <button class="nav on" data-t="home" aria-label="Hôm nay"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/></svg></button>
+  <button class="nav" data-t="weight" aria-label="Cân nặng"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><path d="M8 10a4 4 0 018 0"/><path d="M12 10l2-2"/></svg></button>
+  <button class="nav" data-t="meal" aria-label="Ăn uống"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3v8M4 3v5a3 3 0 006 0V3M7 11v10"/><path d="M17 21V3c-2.5 1.5-3.5 4-3.5 7 0 2 1 3 3.5 3"/></svg></button>
+  <button class="nav" data-t="water" aria-label="Nước"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 2.5-6.5 6-11z"/></svg></button>
+  <button class="nav" data-t="workout" aria-label="Tập luyện"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6.5 6.5v11M17.5 6.5v11M3.5 9v6M20.5 9v6M6.5 12h11"/></svg></button>
 </nav>
 
 <script>
 const $=id=>document.getElementById(id);
 const KEY='tangcan_v1';
-// share = tỉ lệ kcal ngày của từng bữa (tổng = 1)
+const CHECK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7"/></svg>';
+const DROP='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c3.5 4.5 6 7.5 6 11a6 6 0 01-12 0c0-3.5 2.5-6.5 6-11z"/></svg>';
+const PLAY='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+
 const MEALS=[
  {id:'m1',t:'06:30',n:'Bữa sáng',d:'3 trứng + 2 lát bánh mì bơ + 1 ly sữa',share:.20},
  {id:'m2',t:'09:30',n:'Phụ sáng',d:'1 chuối + 2 thìa bơ đậu phộng',share:.10},
@@ -268,49 +430,70 @@ const tk=()=>dkey();
 const last=()=>S.w.length?S.w[S.w.length-1].w:null;
 const hhmm=m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
 const woOf=k=>(S.wo[k]&&typeof S.wo[k]==='object')?S.wo[k]:{};
+function setText(el,v){v=String(v);if(el.textContent!==v){el.textContent=v;el.classList.remove('bump');void el.offsetWidth;el.classList.add('bump')}}
 
-function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',5000)}
-function go(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id==='t-'+t));document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));scrollTo(0,0)}
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>go(b.dataset.t));
+function toast(m){const t=$('toast');t.textContent=m;t.style.display='block';clearTimeout(toast.h);toast.h=setTimeout(()=>t.style.display='none',4500)}
+
+/* ---------- điều hướng + dock ---------- */
+const TABS=['home','weight','meal','water','workout'];
+let curTab='home';
+function placePill(){const n=document.querySelector('.dock .nav.on');if(!n)return;$('pill').style.transform='translateX('+(n.offsetLeft+(n.offsetWidth-60)/2)+'px)'}
+function go(t){
+  if(t===curTab)return;
+  document.body.style.setProperty('--dir',TABS.indexOf(t)>TABS.indexOf(curTab)?1:-1);
+  curTab=t;document.body.dataset.tab=t;
+  document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id==='t-'+t));
+  document.querySelectorAll('.dock .nav').forEach(b=>b.classList.toggle('on',b.dataset.t===t));
+  stagger();placePill();scrollTo({top:0});
+  if(t==='water'||t==='home')renderWater(),renderHome();
+}
+function stagger(){document.querySelectorAll('.tab.on .card,.tab.on .tools,.tab.on .mini').forEach((e,i)=>e.style.setProperty('--i',i))}
+function goWeight(){go('weight');setTimeout(()=>$('wIn').focus(),400)}
+document.querySelectorAll('.dock .nav').forEach(b=>b.onclick=()=>go(b.dataset.t));
+$('avatar').onclick=()=>{go('weight');setTimeout(()=>$('profileCard').scrollIntoView({behavior:'smooth',block:'center'}),450)};
+$('reload').onclick=function(){this.classList.add('spin');setTimeout(()=>location.reload(),350)};
+addEventListener('scroll',()=>$('top').classList.toggle('scrolled',scrollY>8),{passive:true});
+addEventListener('resize',placePill);
 
 /* ---------- KCAL ---------- */
-function energy(){ // Mifflin-St Jeor × hệ số vận động
-  const w=last()||50,{h,a,s,act}=S.p;const bmr=10*w+6.25*h-5*a+(s==='m'?5:-161);return{w,bmr:Math.round(bmr),tdee:Math.round(bmr*act)}}
+function energy(){const w=last()||50,{h,a,s,act}=S.p;const bmr=10*w+6.25*h-5*a+(s==='m'?5:-161);return{w,bmr:Math.round(bmr),tdee:Math.round(bmr*act)}}
 function target(){const e=energy();return{tdee:e.tdee,goal:e.tdee+S.p.pace}}
 function mealKcal(m){return Math.round(m.share*target().goal/10)*10}
 function bmi(){const w=last();return w?w/Math.pow(S.p.h/100,2):null}
 
 function renderPaces(){
   const e=energy(),cur=last();
-  $('paces').innerHTML=PACES.map(p=>{const kg=p.v*7/7700,mo=kg*4.3;
+  $('paces').innerHTML=PACES.map(p=>{const kg=p.v*7/7700,mo=kg*4.3,on=S.p.pace===p.v;
     const eta=cur&&S.p.g>cur?Math.ceil((S.p.g-cur)/kg)+' tuần':'';
-    return `<label class="pace ${S.p.pace===p.v?'on':''}"><input type="radio" name="pace" hidden onchange="setPace(${p.v})">
-    <div class="top"><span><b>${e.tdee+p.v}</b> kcal/ngày <span class="tag">+${p.v}</span></span><span>${p.n}</span></div>
-    <small>≈ +${kg.toFixed(2)} kg/tuần, +${mo.toFixed(1)} kg/tháng${eta?' · đạt '+S.p.g+' kg sau ~'+eta:''}</small><small>${p.d}</small></label>`}).join('');
-  const pr=S.p.pace,kgw=pr*7/7700,pct=kgw/e.w*100;
+    return `<div class="card tap pace ${on?'black':''}" onclick="setPace(${p.v})"><div class="card-top"><h3>${p.n}</h3><span class="tag">+${p.v} kcal</span></div>
+    <div class="pn">${e.tdee+p.v}<small> kcal/ngày</small></div>
+    <p class="sub">≈ +${kg.toFixed(2)} kg/tuần · +${mo.toFixed(1)} kg/tháng${eta?' · đạt '+S.p.g+' kg sau ~'+eta:''}</p><p class="sub">${p.d}</p></div>`}).join('');
+  const kgw=S.p.pace*7/7700,pct=kgw/e.w*100;
   $('kcalNote').innerHTML=`Cân nặng ${e.w} kg → chuyển hóa cơ bản ~<b>${e.bmr}</b> kcal, tiêu hao cả ngày ~<b>${e.tdee}</b> kcal. Mốc đang chọn tăng ~${pct.toFixed(2)}% cân nặng/tuần${pct>0.5?' (hơi nhanh, dễ tăng mỡ)':''}. Sau 2 tuần, nếu cân không đổi thì tăng mốc 100–150 kcal; nếu tăng quá 0.5 kg/tuần thì giảm bớt.`;
   const lo=Math.round(e.w*1.6),hi=Math.round(e.w*2.0);
-  $('protein').innerHTML=`<div class="grid"><div class="stat"><b>${lo}–${hi} g</b><span>Đạm / ngày</span></div><div class="stat"><b>${Math.round(lo/6)}–${Math.round(hi/6)} g</b><span>Mỗi bữa (6 bữa)</span></div><div class="stat"><b>${Math.round(e.w*1.6*4)}</b><span>kcal từ đạm (tối thiểu)</span></div></div>`;
+  $('protein').innerHTML=`<div class="stat3"><div class="cnt"><b>${lo}–${hi}</b><span>g đạm / ngày</span></div><div class="cnt"><b>${Math.round(lo/6)}–${Math.round(hi/6)}</b><span>g mỗi bữa (6 bữa)</span></div><div class="cnt"><b>${lo*4}</b><span>kcal từ đạm (tối thiểu)</span></div></div>`;
 }
 function setPace(v){S.p.pace=v;save();renderAll()}
 
 /* ---------- NƯỚC ---------- */
-// Nhu cầu nước ~35 ml/kg (Viện Dinh dưỡng, người 19–55 tuổi vận động vừa). Thức ăn cung cấp ~20% (EFSA) nên cần uống ~28 ml/kg.
+// ~35 ml/kg (Viện Dinh dưỡng, 19–55 tuổi vận động vừa); thức ăn cung cấp ~20% (EFSA) nên uống ~28 ml/kg.
 function waterPlan(){
   const w=last()||50,total=Math.round(w*35),drink=Math.round(w*28/100)*100,n=Math.max(8,Math.round(drink/100));
-  const times=[];for(let i=0;i<n;i++)times.push(Math.round((450+i*870/(n-1))/5)*5); // 07:30 → 22:00
+  const times=[];for(let i=0;i<n;i++)times.push(Math.round((450+i*870/(n-1))/5)*5);
   return{w,total,drink:n*100,n,times}}
 function cupsDone(){const d=S.cup[tk()]||{};return Object.keys(d).filter(k=>d[k]).length}
 function toggleCup(i){const k=tk();S.cup[k]=S.cup[k]||{};S.cup[k][i]=!S.cup[k][i];save();renderHome();renderWater()}
-function quickCup(){const wp=waterPlan(),k=tk();S.cup[k]=S.cup[k]||{};for(let i=0;i<wp.n;i++)if(!S.cup[k][i]){S.cup[k][i]=true;break}save();renderHome();renderWater()}
+function quickCup(){const wp=waterPlan(),k=tk();S.cup[k]=S.cup[k]||{};let ok=false;for(let i=0;i<wp.n;i++)if(!S.cup[k][i]){S.cup[k][i]=true;ok=true;break}save();renderHome();renderWater();toast(ok?'Đã tick 1 cốc nước 💧':'Hôm nay đã đủ nước rồi')}
 function renderWater(){
   const wp=waterPlan(),d=S.cup[tk()]||{},done=cupsDone(),n=new Date(),nowMin=n.getHours()*60+n.getMinutes();
-  $('wCups').textContent=wp.n;$('wMl').textContent=wp.drink;$('wDone').textContent=done*100+' ml';
-  $('wBar').style.width=Math.min(100,done/wp.n*100)+'%';
+  setText($('wHeroVal'),done+' / '+wp.n);$('wHeroU').textContent=' cốc';
+  $('wBarWrap').style.setProperty('--n',wp.n);$('wBar').style.width=Math.min(100,done/wp.n*100)+'%';
+  $('wsNeed').textContent=wp.drink+' ml';$('wsDrunk').textContent=done*100+' ml';$('wsLeft').textContent=Math.max(0,wp.drink-done*100)+' ml';
   const due=wp.times.filter(t=>t<=nowMin).length;
-  $('wStatus').textContent=done>=wp.n?'Đã đủ nước hôm nay 🎉':(due>done?`Theo lịch, bạn nên đã uống ${due} cốc, còn thiếu ${due-done} cốc.`:'Đúng tiến độ 👍');
-  $('cups').innerHTML=wp.times.map((t,i)=>`<button class="cup ${d[i]?'on':''} ${!d[i]&&t<=nowMin?'late':''}" onclick="toggleCup(${i})"><span>${d[i]?'✓':'🥛'}</span><small>${hhmm(t)}</small></button>`).join('');
-  $('remWBtn').textContent=S.remW?'Tắt':'Bật';$('remWBtn').className=S.remW?'ghost':'';
+  $('wStatus').innerHTML=done>=wp.n?'<span class="up">Đã đủ nước hôm nay 🎉</span>':(due>done?`<span class="dn">Thiếu ${due-done} cốc so với lịch</span>`:'<span class="up">Đúng tiến độ</span>');
+  $('cupTag').textContent=wp.n+' cốc';
+  $('cups').innerHTML=wp.times.map((t,i)=>`<button class="cc ${d[i]?'on':''} ${!d[i]&&t<=nowMin?'late':''}" onclick="toggleCup(${i})">${d[i]?CHECK:DROP}<span>${hhmm(t)}</span></button>`).join('');
+  $('remWSw').classList.toggle('on',!!S.remW);
   $('wNote').innerHTML=`Cân nặng ${wp.w} kg × 35 ml = <b>${wp.total} ml</b> nước/ngày (Viện Dinh dưỡng, người 19–55 tuổi vận động vừa). Khoảng 20% đến từ thức ăn nên cần uống ~<b>${wp.drink} ml</b> = ${wp.n} cốc, chia đều từ 07:30 đến 22:00 (cách nhau ~${Math.round(870/(wp.n-1))} phút). Tập ra nhiều mồ hôi hoặc trời nóng thì uống thêm. Người có bệnh tim, thận cần hỏi bác sĩ. Cân nặng đổi thì số cốc tự đổi theo. Tham khảo: <a href="https://www.vinmec.com/vie/bai-viet/uong-nuoc-dung-cach-trong-dieu-tri-soi-tiet-nieu-vi" target="_blank" rel="noopener">Vinmec</a>, <a href="https://link.springer.com/doi/10.1007/s00394-015-0943-9" target="_blank" rel="noopener">EFSA qua nghiên cứu Eur J Nutr</a>.`;
 }
 async function toggleRemindW(){
@@ -319,23 +502,28 @@ async function toggleRemindW(){
 
 /* ---------- HÔM NAY ---------- */
 function renderHome(){
-  const hr=new Date().getHours();$('hello').textContent=(hr<11?'Chào buổi sáng':hr<18?'Chào buổi chiều':'Chào buổi tối')+' 👋';
+  const hr=new Date().getHours();$('hello').textContent=hr<11?'Chào buổi sáng':hr<18?'Chào buổi chiều':'Chào buổi tối';
   $('today').textContent=new Date().toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});
   const c=last(),b=bmi();
-  $('sCur').textContent=c?c.toFixed(1):'--';$('sGoal').textContent=S.p.g;$('sBmi').textContent=b?b.toFixed(1):'--';
-  if(c&&S.w.length){const st=S.w[0].w,tot=S.p.g-st,pct=tot>0?Math.max(0,Math.min(100,(c-st)/tot*100)):0;
-    $('prog').style.width=pct+'%';$('progPct').textContent=Math.round(pct)+'%';
-    $('progTxt').textContent=c>=S.p.g?'Đã đạt mục tiêu 🎉':'Còn '+(S.p.g-c).toFixed(1)+' kg nữa';
-  }else{$('prog').style.width='0';$('progPct').textContent='';$('progTxt').textContent='Hãy nhập cân nặng đầu tiên'}
+  setText($('heroVal'),c?c.toFixed(1):'--');$('hsGoal').textContent=S.p.g;$('hsBmi').textContent=b?b.toFixed(1):'--';
+  $('hsLeft').textContent=c?(c>=S.p.g?'Đạt':(S.p.g-c).toFixed(1)):'--';
+  if(S.w.length>1){const df=c-S.w[S.w.length-2].w;$('heroDelta').innerHTML=`<span class="${df>=0?'up':'dn'}">${df>=0?'+':''}${df.toFixed(1)} kg</span> so với lần cân trước`}
+  else $('heroDelta').innerHTML=c?'Cân thêm vài ngày để thấy xu hướng':'Nhập cân nặng đầu tiên của bạn';
+  if(c&&S.w.length){const st=S.w[0].w,tot=S.p.g-st,pct=tot>0?Math.max(0,Math.min(100,(c-st)/tot*100)):(c>=S.p.g?100:0);
+    $('kpiBar').style.width=pct+'%';$('kpiPct').textContent=Math.round(pct)+'%';
+    $('kpiL').innerHTML=`Bắt đầu <b>${st.toFixed(1)}</b> kg`;$('kpiR').innerHTML=`Mục tiêu <b>${S.p.g}</b> kg`;
+  }else{$('kpiBar').style.width='0';$('kpiPct').textContent='0%';$('kpiL').textContent='Chưa có dữ liệu';$('kpiR').innerHTML=`Mục tiêu <b>${S.p.g}</b> kg`}
   const ck=S.c[tk()]||{};let kc=0;
-  $('homeMeals').innerHTML=MEALS.map(m=>{if(ck[m.id])kc+=mealKcal(m);return mealRow(m,ck[m.id])}).join('');
+  $('homeMeals').innerHTML=MEALS.map(m=>{const dn=!!ck[m.id];if(dn)kc+=mealKcal(m);
+    return `<div class="jrow ${dn?'done':''}"><div class="ic">${m.t}</div><div class="in"><div class="nm">${m.n}</div><div class="sb">${m.d}</div></div><div class="kc">${mealKcal(m)}<small>kcal</small></div><button class="ok" onclick="checkMeal('${m.id}',${!dn})" aria-label="Đã ăn">${CHECK}</button></div>`}).join('');
   $('kcalTag').textContent=kc+' / '+target().goal+' kcal';
   const wp=waterPlan(),done=cupsDone();
-  $('waterTxt').textContent=`${done} / ${wp.n} cốc (${done*100} / ${wp.drink} ml)`;$('homeWBar').style.width=Math.min(100,done/wp.n*100)+'%';
+  setText($('miniW'),done+'/'+wp.n+' cốc');$('miniWs').textContent=done*100+' / '+wp.drink+' ml';
+  $('miniWbar').style.setProperty('--n',wp.n);$('miniWbar').firstElementChild.style.width=Math.min(100,done/wp.n*100)+'%';
   const p=PLAN[new Date().getDay()],o=woOf(tk()),nd=p.mods.filter(m=>o[m]).length,tm=p.mods.reduce((a,m)=>a+MODS[m].min,0);
-  $('homeWorkout').textContent=`${p.n}: ${p.title} · ${p.mods.length} bài, ~${tm} phút · xong ${nd}/${p.mods.length}`;
+  setText($('miniT'),nd+'/'+p.mods.length+' bài');$('miniTs').textContent=`${p.n} · ${p.title} · ~${tm} phút`;
+  $('miniTbar').style.setProperty('--n',p.mods.length);$('miniTbar').firstElementChild.style.width=(nd/p.mods.length*100)+'%';
 }
-function mealRow(m,done){return `<label class="meal ${done?'done':''}"><input type="checkbox" ${done?'checked':''} onchange="checkMeal('${m.id}',this.checked)"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d} · ${mealKcal(m)} kcal</small></span></label>`}
 function checkMeal(id,v){const k=tk();S.c[k]=S.c[k]||{};S.c[k][id]=v;save();renderHome()}
 
 /* ---------- CÂN NẶNG ---------- */
@@ -349,23 +537,25 @@ function resetAll(){if(confirm('Xóa toàn bộ dữ liệu?')){localStorage.rem
 
 function renderWeight(){
   $('pH').value=S.p.h;$('pA').value=S.p.a;$('pS').value=S.p.s;$('pG').value=S.p.g;$('pAct').value=String(S.p.act);
+  const c=last(),b=bmi();$('wsCur').textContent=c?c.toFixed(1):'--';$('wsBmi').textContent=b?b.toFixed(1):'--';
+  $('wsDelta').textContent=S.w.length>1?((c-S.w[0].w)>=0?'+':'')+(c-S.w[0].w).toFixed(1):'--';
   $('hist').innerHTML=S.w.length?[...S.w].reverse().slice(0,10).map((x,i)=>{const prev=S.w[S.w.length-2-i];const df=prev?x.w-prev.w:0;
-    return `<div class="hist"><span>${x.d.split('-').reverse().join('/')}</span><span><b>${x.w.toFixed(1)} kg</b> <small style="color:${df>=0?'var(--pri)':'var(--bad)'}">${prev?(df>=0?'+':'')+df.toFixed(1):''}</small> <button class="ghost sm" onclick="delWeight('${x.d}')">xóa</button></span></div>`}).join(''):'<p class="sub">Chưa có dữ liệu.</p>';
-  const W=600,H=220,pad=34;const pts=S.w.slice(-30);
-  if(pts.length<2){$('chart').innerHTML='<p class="sub">Cần ít nhất 2 lần cân để vẽ biểu đồ.</p>';$('chartNote').textContent='';return}
+    return `<div class="hist"><span>${x.d.split('-').reverse().join('/')}</span><span><b>${x.w.toFixed(1)} kg</b><small class="${df>=0?'up':'dn'}">${prev?(df>=0?'+':'')+df.toFixed(1):''}</small></span><button class="qbtn" onclick="delWeight('${x.d}')" aria-label="Xóa"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>`}).join(''):'<p class="note">Chưa có dữ liệu.</p>';
+  const W=600,H=220,pad=34,pts=S.w.slice(-30);
+  if(pts.length<2){$('chart').innerHTML='<p class="note">Cần ít nhất 2 lần cân để vẽ biểu đồ.</p>';$('chartNote').textContent='';return}
   const vals=pts.map(p=>p.w).concat(S.p.g);const mn=Math.floor(Math.min(...vals)-1),mx=Math.ceil(Math.max(...vals)+1);
   const x=i=>pad+i*(W-pad*1.5)/(pts.length-1),y=v=>H-pad-(v-mn)/(mx-mn)*(H-pad*1.6);
-  let g='';for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;g+=`<line x1="${pad}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" stroke="var(--line)"/><text x="4" y="${y(v)+4}" font-size="11" fill="var(--mut)">${v.toFixed(0)}</text>`}
+  let g='';for(let i=0;i<=4;i++){const v=mn+(mx-mn)*i/4;g+=`<line x1="${pad}" x2="${W-8}" y1="${y(v)}" y2="${y(v)}" stroke="rgba(0,0,0,.08)"/><text x="4" y="${y(v)+4}" font-size="11" fill="#85858b">${v.toFixed(0)}</text>`}
   const path=pts.map((p,i)=>(i?'L':'M')+x(i)+' '+y(p.w)).join(' ');
-  $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<line x1="${pad}" x2="${W-8}" y1="${y(S.p.g)}" y2="${y(S.p.g)}" stroke="var(--acc)" stroke-dasharray="6 4"/><text x="${W-8}" y="${y(S.p.g)-5}" text-anchor="end" font-size="11" fill="var(--acc)">Mục tiêu ${S.p.g}kg</text><path d="${path}" fill="none" stroke="var(--pri)" stroke-width="3" stroke-linejoin="round"/>${pts.map((p,i)=>`<circle cx="${x(i)}" cy="${y(p.w)}" r="4" fill="var(--pri)"/>`).join('')}<text x="${pad}" y="${H-8}" font-size="11" fill="var(--mut)">${pts[0].d.slice(5).split('-').reverse().join('/')}</text><text x="${W-8}" y="${H-8}" text-anchor="end" font-size="11" fill="var(--mut)">${pts[pts.length-1].d.slice(5).split('-').reverse().join('/')}</text></svg>`;
+  $('chart').innerHTML=`<svg viewBox="0 0 ${W} ${H}">${g}<line x1="${pad}" x2="${W-8}" y1="${y(S.p.g)}" y2="${y(S.p.g)}" stroke="#f59f00" stroke-dasharray="6 4"/><text x="${W-8}" y="${y(S.p.g)-5}" text-anchor="end" font-size="11" fill="#f59f00">Mục tiêu ${S.p.g}kg</text><path d="${path}" fill="none" stroke="#2f9e6b" stroke-width="3" stroke-linejoin="round"/>${pts.map((p,i)=>`<circle cx="${x(i)}" cy="${y(p.w)}" r="4.5" fill="#141414" stroke="#fff" stroke-width="2"/>`).join('')}<text x="${pad}" y="${H-8}" font-size="11" fill="#85858b">${pts[0].d.slice(5).split('-').reverse().join('/')}</text><text x="${W-8}" y="${H-8}" text-anchor="end" font-size="11" fill="#85858b">${pts[pts.length-1].d.slice(5).split('-').reverse().join('/')}</text></svg>`;
   const d=pts[pts.length-1].w-pts[0].w;$('chartNote').textContent=`Thay đổi trong ${pts.length} lần cân gần nhất: ${d>=0?'+':''}${d.toFixed(1)} kg`;
 }
 
 /* ---------- ĂN UỐNG ---------- */
 function renderMeal(){
   renderPaces();
-  $('mealList').innerHTML=MEALS.map(m=>`<div class="meal"><span class="t">${m.t}</span><span class="d"><b>${m.n}</b><small>${m.d}</small></span><span class="tag">${mealKcal(m)} kcal</span></div>`).join('');
-  $('remBtn').textContent=S.rem?'Tắt':'Bật';$('remBtn').className=S.rem?'ghost':'';
+  $('mealList').innerHTML=MEALS.map(m=>`<div class="jrow"><div class="ic">${m.t}</div><div class="in"><div class="nm">${m.n}</div><div class="sb">${m.d}</div></div><div class="kc">${mealKcal(m)}<small>kcal</small></div></div>`).join('');
+  $('remSw').classList.toggle('on',!!S.rem);
 }
 async function toggleRemind(){
   if(!S.rem){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();S.rem=true;toast('Đã bật nhắc ăn')}else S.rem=false;
@@ -381,16 +571,23 @@ function checkReminders(){
 setInterval(checkReminders,20000);
 
 /* ---------- TẬP LUYỆN ---------- */
-let selDay=new Date().getDay();
+let selDay=new Date().getDay();const OPEN=new Set();
+function dateOfDay(i){const t=new Date(),off=((i+6)%7)-((t.getDay()+6)%7);const d=new Date(t);d.setDate(t.getDate()+off);return d}
 function renderWorkout(){
-  const order=[1,2,3,4,5,6,0];
-  $('week').innerHTML=order.map(i=>`<button class="${i===selDay?'on':''} ${PLAN[i].rest?'rest':''}" onclick="selDay=${i};renderWorkout()">${PLAN[i].s}</button>`).join('');
-  const p=PLAN[selDay],tm=p.mods.reduce((a,m)=>a+MODS[m].min,0),isToday=selDay===new Date().getDay(),o=isToday?woOf(tk()):{};
+  const order=[1,2,3,4,5,6,0],today=new Date().getDay();
+  $('wkMonth').textContent='Tháng '+(new Date().getMonth()+1);
+  $('week').innerHTML=order.map(i=>{const d=dateOfDay(i),o=woOf(dkey(d)),has=Object.keys(o).some(k=>o[k]);
+    return `<button class="wd ${i===selDay?'on':''} ${PLAN[i].rest?'rest':''} ${i===today?'today':''}" onclick="selDay=${i};renderWorkout()"><small>${PLAN[i].s}</small><b>${d.getDate()}</b><i class="${has?'has':''}"></i></button>`}).join('');
+  const p=PLAN[selDay],tm=p.mods.reduce((a,m)=>a+MODS[m].min,0),isToday=selDay===today,o=woOf(dkey(dateOfDay(selDay)));
+  $('wkTag').textContent=p.rest?'Nghỉ nhẹ':'Ngày tập';
   $('wTitle').textContent=p.n+' · '+p.title;$('wDesc').textContent=`${p.desc} Tổng ~${tm} phút, ${p.mods.length} bài.`;
-  $('modList').innerHTML=p.mods.map(id=>{const m=MODS[id];return `<div class="mod ${o[id]?'done':''}"><div class="hd"><b>${m.n}</b><span><span class="tag">${m.min} phút</span><span class="tag">${m.lv}</span></span></div>
-    <ul>${m.steps.map(s=>`<li>${s}</li>`).join('')}</ul>${m.tip?`<div class="tip">💡 ${m.tip}</div>`:''}
-    <div class="row" style="margin-top:8px"><button class="sm" onclick="startTimer(${m.min*60},'${m.n.replace(/'/g,'')}');window.scrollTo(0,document.body.scrollHeight)">▶ Bấm giờ ${m.min}′</button>${isToday?`<button class="ghost sm" onclick="doneMod('${id}')">${o[id]?'✅ Đã xong':'Đánh dấu xong'}</button>`:''}</div></div>`}).join('');
+  $('modList').innerHTML=p.mods.map((id,idx)=>{const m=MODS[id],dn=!!o[id];
+    return `<div class="mrow ${dn?'done':''} ${OPEN.has(id)?'open':''}"><div class="mh" onclick="openMod('${id}')"><div class="mi">${idx+1}</div><div class="in"><div class="nm">${m.n}</div><div class="sb">${m.min} phút · ${m.lv}</div></div>
+    <button class="qbtn go" onclick="event.stopPropagation();startTimer(${m.min*60},'${m.n.replace(/'/g,'')}');scrollTo({top:document.body.scrollHeight,behavior:'smooth'})" aria-label="Bấm giờ">${PLAY}</button>
+    ${isToday?`<button class="qbtn ${dn?'on':''}" onclick="event.stopPropagation();doneMod('${id}')" aria-label="Đánh dấu xong">${CHECK}</button>`:''}</div>
+    <div class="mb"><ul>${m.steps.map(s=>`<li>${s}</li>`).join('')}</ul>${m.tip?`<div class="tip">💡 ${m.tip}</div>`:''}</div></div>`}).join('');
 }
+function openMod(id){OPEN.has(id)?OPEN.delete(id):OPEN.add(id);renderWorkout()}
 function doneMod(id){const k=tk();const o=woOf(k);S.wo[k]=Object.assign({},o,{[id]:!o[id]});save();renderAll();if(S.wo[k][id])toast('Tốt lắm! 💪')}
 
 let tid;
@@ -400,7 +597,8 @@ function startTimer(sec,label){clearInterval(tid);let r=sec;$('timerLbl').textCo
 function stopTimer(){clearInterval(tid);$('timer').textContent='1:00';$('timerLbl').textContent='Nghỉ giữa hiệp'}
 
 function renderAll(){renderHome();renderWeight();renderMeal();renderWater();renderWorkout()}
-renderAll();
+renderAll();stagger();placePill();
+addEventListener('load',placePill);
 </script>
 </body>
 </html>
