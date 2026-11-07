@@ -381,7 +381,7 @@ body{--dir:0}
       </div>
       <div class="card"><h3 style="margin-bottom:8px">Lưu ý</h3><p class="note" style="margin:0">
         • Tăng tiến chậm: khi làm đủ số lần ở mọi hiệp một cách dễ dàng, buổi sau thêm 1–2 lần hoặc hạ chậm hơn. Sau 2–3 tuần mới thêm hiệp.<br>
-        • Nên có ít nhất 2 ngày/tuần tập tăng cơ (WHO 2020 khuyến nghị vận động tăng cơ đều đặn cho người lớn). Lịch trên có 4 ngày.<br>
+        • Nên có ít nhất 2 ngày/tuần tập tăng cơ (WHO 2020 khuyến nghị vận động tăng cơ đều đặn cho người lớn). Lịch trên có 5 ngày tập nhẹ, ngày Thứ 3 và Chủ nhật nghỉ. Mệt thì bỏ bớt 1 ngày.<br>
         • Dừng lại nếu đau nhói, chóng mặt, tức ngực. Có bệnh tim, khớp, huyết áp thì hỏi bác sĩ trước.<br>
         • Ngủ 7–8 tiếng và ăn đủ kcal mới tăng cơ được.</p></div>
     </div>
@@ -476,7 +476,29 @@ const FIG={
  child:[P([30,62],[[38,60],[76,58]],[[38,60],[26,66],[14,70],[10,70]],[[76,58],[88,70],[104,70],[108,70]]),
         P([28,66],[[36,64],[76,60]],[[36,64],[24,68],[12,70],[8,70]],[[76,60],[88,70],[104,70],[108,70]])],
  hamstring:[P([38,40],[[38,46],[38,66]],[[38,48],[52,54],[64,60],[70,62]],[[38,66],[68,66],[98,66],[104,66]]),
-            P([64,50],[[56,52],[38,66]],[[56,54],[72,60],[86,64],[92,66]],[[38,66],[68,66],[98,66],[104,66]])]
+            P([64,50],[[56,52],[38,66]],[[56,54],[72,60],[86,64],[92,66]],[[38,66],[68,66],[98,66],[104,66]])],
+ incline:[P([26,36],[[34,40],[66,57]],[[34,40],[34,48],[32,56],[36,56]],[[66,57],[84,64],[100,71],[106,71]]),
+          P([26,46],[[34,50],[66,62]],[[34,50],[44,54],[32,56],[36,56]],[[66,62],[84,67],[100,71],[106,71]]),'<path d="M10 57H44V72H10Z" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="rgba(0,0,0,.04)"/>'],
+ decline:[P([26,46],[[34,50],[66,52]],[[34,50],[34,61],[34,72],[38,72]],[[66,52],[84,54],[100,56],[106,56]]),
+          P([26,58],[[34,62],[66,58]],[[34,62],[46,66],[34,72],[38,72]],[[66,58],[84,57],[100,56],[106,56]]),'<path d="M92 56H116V72H92Z" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="rgba(0,0,0,.04)"/>'],
+ palm:[P([60,12],FT,[[51,22],[69,22]],[[51,22],[44,32],[52,36]],[[69,22],[76,32],[68,36]],FL1,FL2),
+       P([60,12],FT,[[51,22],[69,22]],[[51,22],[49,33],[59,35]],[[69,22],[71,33],[61,35]],FL1,FL2)],
+ curl:[P([60,12],FT,[[60,22],[61,32],[62,42]],[[60,44],[61,58],[60,72],[67,72]]),
+       P([60,12],FT,[[60,22],[61,32],[70,26]],[[60,44],[61,58],[60,72],[67,72]])],
+ triext:[P([68,13],FT,[[60,22],[62,6],[54,14]],[[60,44],[61,58],[60,72],[67,72]]),
+         P([68,13],FT,[[60,22],[61,10],[61,-2]],[[60,44],[61,58],[60,72],[67,72]])],
+ kickback:[P([38,32],[[46,38],[72,48]],[[46,38],[58,43],[58,56]],[[72,48],[74,60],[72,72],[79,72]]),
+           P([38,32],[[46,38],[72,48]],[[46,38],[58,43],[72,44]],[[72,48],[74,60],[72,72],[79,72]])],
+ wallsit:[P([42,14],[[40,22],[40,46]],[[40,24],[50,34],[58,44]],[[40,46],[62,48],[62,72],[69,72]]),
+          P([42,17],[[40,25],[40,50]],[[40,27],[50,37],[58,47]],[[40,50],[62,50],[62,72],[69,72]]),'<path d="M34 -4V72" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="rgba(0,0,0,.04)"/>'],
+ stepup:[P([44,10],[[44,20],[44,44]],[[44,22],[46,32],[48,40]],[[44,44],[44,58],[44,72],[51,72]],F([[44,44],[58,50],[62,60],[69,60]])),
+         P([64,0],[[62,8],[62,32]],[[62,10],[64,20],[66,28]],[[62,32],[63,46],[62,60],[69,60]],F([[62,32],[66,42],[62,50],[58,52]])),'<path d="M56 60H88V72H56Z" stroke="#b9b9be" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="rgba(0,0,0,.04)"/>'],
+ sumo:[P([60,12],FT,[[51,22],[69,22]],[[51,22],[52,30],[60,32]],[[69,22],[68,30],[60,32]],[[54,44],[46,58],[40,72]],[[66,44],[74,58],[80,72]]),
+       P([60,24],[[60,32],[60,54]],[[51,34],[69,34]],[[51,34],[52,42],[60,44]],[[69,34],[68,42],[60,44]],[[54,54],[38,60],[36,72]],[[66,54],[82,60],[84,72]])],
+ sidelg:[P([60,12],FT,[[51,22],[69,22]],[[51,22],[43,32],[51,43]],[[69,22],[77,32],[69,43]],[[56,44],[55,58],[55,72]],[[64,44],[65,58],[65,72]]),
+         P([58,12],[[59,20],[58,44]],[[49,22],[67,22]],[[49,22],[41,32],[49,43]],[[67,22],[75,32],[67,43]],[[55,44],[54,58],[54,72]],[[62,44],[74,56],[84,66]])],
+ bridge1:[P([20,68],[[30,68],[62,52]],[[32,68],[46,70],[58,70]],[[62,52],[80,50],[90,70],[97,70]],F([[62,52],[80,50],[90,70],[97,70]])),
+          P([20,68],[[30,68],[62,50]],[[32,68],[46,70],[58,70]],[[62,50],[80,50],[90,70],[97,70]],F([[62,50],[84,40],[104,32],[110,30]]))]
 };
 function figSVG(key,frame){
   const [A,B,extra]=FIG[key],pa=pts=>'M'+pts.map(p=>p.join(' ')).join('L');
@@ -518,29 +540,44 @@ const EX={
  quad:{n:'Giãn đùi trước',cue:'Đứng một chân, kéo gót chân kia về mông, giữ 30 giây, đổi bên. Bám tường nếu cần.',q:'cách giãn cơ đùi trước quad stretch'},
  chest:{n:'Giãn ngực ở khung cửa',cue:'Hai tay chống khung cửa, bước nhẹ một chân lên trước cho ngực mở ra.',q:'giãn ngực ở khung cửa doorway chest stretch'},
  child:{n:'Tư thế em bé',cue:'Quỳ, ngồi lùi hông về gót chân, duỗi tay ra trước, thả lỏng lưng và hít thở.',q:'tư thế em bé child pose hướng dẫn'},
- hamstring:{n:'Giãn đùi sau',cue:'Ngồi duỗi thẳng chân, gập người về trước với lưng thẳng, giữ 30 giây.',q:'cách giãn cơ đùi sau ngồi hamstring stretch'}
+ hamstring:{n:'Giãn đùi sau',cue:'Ngồi duỗi thẳng chân, gập người về trước với lưng thẳng, giữ 30 giây.',q:'cách giãn cơ đùi sau ngồi hamstring stretch'},
+ pushup3:{n:'Hít đất tay rộng (ngực)',fig:'pushup',cue:'Hai tay đặt rộng hơn vai một chút, hạ ngực xuống chậm 3 giây rồi đẩy lên. Quỳ gối nếu chưa đủ sức.',q:'hít đất tay rộng wide push up tập ngực tại nhà'},
+ incline:{n:'Hít đất tay chống ghế (dễ hơn)',cue:'Hai tay chống mép ghế hoặc bàn chắc, người thẳng một đường, hạ ngực chạm mép ghế rồi đẩy lên. Đặt ghế sát tường.',q:'hít đất tay chống ghế incline push up cho người mới'},
+ decline:{n:'Hít đất chân kê ghế (ngực trên)',cue:'Hai chân kê lên ghế thấp, tay chống sàn. Bài khó hơn, chỉ làm khi hít đất thường đã đủ 3 × 10 lần.',q:'hít đất chân kê cao decline push up'},
+ palm:{n:'Ép hai bàn tay trước ngực',cue:'Chắp hai bàn tay trước ngực, ép thật mạnh 5 giây rồi thả. Cảm nhận cơ ngực căng lên.',q:'bài tập ép lòng bàn tay trước ngực isometric chest press'},
+ curl:{n:'Cuốn tạ chai nước (bắp tay trước)',cue:'Cầm chai nước 1–1.5 lít, khuỷu tay ép sát người, cuốn tay lên vai rồi hạ chậm 3 giây. Không đung đưa người.',q:'bài tập bicep curl bằng chai nước tại nhà'},
+ hammer:{n:'Cuốn tạ búa (hammer curl)',fig:'curl',cue:'Giống cuốn tạ nhưng lòng bàn tay hướng vào nhau như cầm búa. Tập bắp tay trước và cẳng tay.',q:'hammer curl bằng chai nước tại nhà'},
+ triext:{n:'Duỗi tay sau đầu (tay sau)',cue:'Hai tay cầm một chai nước, đưa ra sau đầu rồi duỗi thẳng lên trời. Khuỷu tay hướng lên, không xòe ra.',q:'overhead triceps extension tập tay sau tại nhà'},
+ kickback:{n:'Kickback tay sau',cue:'Cúi người lưng phẳng, khuỷu tay sát thân, duỗi thẳng cẳng tay ra sau rồi gập về. Mỗi bên làm đủ hiệp.',q:'triceps kickback bằng chai nước tại nhà'},
+ wallsit:{n:'Tựa tường ngồi (wall sit)',cue:'Lưng tựa tường, trượt xuống đến khi đùi gần ngang sàn, gối trên cổ chân. Giữ nguyên, thở đều.',q:'cách tập wall sit tựa tường'},
+ stepup:{n:'Bước lên bậc (step-up)',cue:'Đặt cả bàn chân lên bậc thấp (khoảng 15–25 cm) hoặc cuốn sách dày, đứng thẳng lên rồi bước xuống chậm. Đổi chân sau mỗi hiệp.',q:'cách tập step up bước lên bậc tại nhà'},
+ sumo:{n:'Squat chân rộng (sumo)',cue:'Hai chân rộng hơn vai, mũi chân hơi chéo ra. Hạ người thẳng xuống, gối theo hướng mũi chân. Tập đùi trong và mông.',q:'cách tập sumo squat tại nhà'},
+ sidelg:{n:'Nâng chân sang ngang',cue:'Đứng thẳng, bám tường, nâng một chân sang ngang chậm rồi hạ xuống. Thân không nghiêng. Tập mông bên.',q:'bài tập nâng chân sang ngang standing side leg raise'},
+ bridge1:{n:'Glute bridge một chân',cue:'Giống glute bridge nhưng duỗi một chân lên cao, dùng chân còn lại nâng hông. Hông giữ ngang, không xoay.',q:'single leg glute bridge cách tập'},
+ rlunge:{n:'Lunge lùi',fig:'lunge',cue:'Bước một chân ra sau, hạ gối sau gần sàn, đẩy gót chân trước đứng lên. Dễ giữ thăng bằng hơn lunge bước tới.',q:'reverse lunge lunge lùi cách tập'}
 };
 // e: bài; sets: số hiệp; amt: mỗi hiệp làm bao nhiêu; rest: giây nghỉ giữa hiệp; sec: nếu là bài tính giờ (giây)
 const MODS={
  warm:{n:'Khởi động & mở khớp',min:5,lv:'Rất nhẹ',ex:[{e:'shrug',sets:1,amt:'10 vòng mỗi chiều'},{e:'hipc',sets:1,amt:'10 vòng mỗi bên'},{e:'march',sets:1,amt:'60 giây',sec:60},{e:'squat',sets:1,amt:'8 lần, thật chậm'},{e:'breath',sets:1,amt:'5 nhịp'}]},
- push:{n:'Hít đất nhẹ (ngực, tay sau)',min:8,lv:'Nhẹ',ex:[{e:'pushup',sets:3,amt:'6–10 lần',rest:60},{e:'pushup2',sets:2,amt:'5–8 lần',rest:60},{e:'chest',sets:2,amt:'20 giây',sec:20,rest:15}],tip:'Chưa làm nổi 6 lần thì tập đẩy tường trước, rồi hạ dần xuống mặt bàn, sàn nhà.'},
  shoulder:{n:'Vai & tay sau',min:7,lv:'Nhẹ',ex:[{e:'lateral',sets:3,amt:'10 lần',rest:45},{e:'press',sets:3,amt:'10 lần',rest:45},{e:'dips',sets:2,amt:'8 lần',rest:60}],tip:'Dùng ghế chắc, đặt sát tường.'},
  legs:{n:'Squat ghế & bước chân',min:8,lv:'Nhẹ',ex:[{e:'squat',sets:3,amt:'10–12 lần',rest:60},{e:'lunge',sets:2,amt:'8 lần mỗi chân',rest:60},{e:'calf',sets:2,amt:'15 lần',rest:45}],tip:'Gối hướng theo mũi chân, lưng thẳng.'},
  glute:{n:'Mông & lưng dưới',min:7,lv:'Rất nhẹ',ex:[{e:'bridge',sets:3,amt:'12 lần',rest:45},{e:'birddog',sets:2,amt:'8 lần mỗi bên',rest:45},{e:'superman',sets:2,amt:'8 lần, giữ 2 giây',rest:45},{e:'child',sets:1,amt:'30 giây',sec:30}]},
  back:{n:'Kéo lưng với balo',min:8,lv:'Nhẹ',ex:[{e:'row',sets:3,amt:'10 lần',rest:60},{e:'wraise',sets:2,amt:'10 lần',rest:45}],tip:'Bóp bả vai về sau khi kéo, không giật.'},
  core:{n:'Bụng nhẹ (plank, dead bug)',min:7,lv:'Nhẹ',ex:[{e:'plank',sets:3,amt:'20–30 giây',sec:25,rest:45},{e:'deadbug',sets:2,amt:'8 lần mỗi bên',rest:45},{e:'crunch',sets:2,amt:'10 lần',rest:45}]},
- full:{n:'Vòng tuần hoàn toàn thân nhẹ',min:10,lv:'Vừa',ex:[{e:'squat',sets:3,amt:'10 lần (vòng)',rest:0},{e:'pushup',sets:3,amt:'6 lần (vòng)',rest:0},{e:'bridge',sets:3,amt:'10 lần (vòng)',rest:0},{e:'plank',sets:3,amt:'20 giây (vòng)',sec:20,rest:60}],tip:'Làm lần lượt 4 bài là 1 vòng, nghỉ 60 giây rồi làm vòng tiếp theo (tổng 3 vòng). Tick ô vòng 1, 2, 3 ở mỗi bài.'},
+ chest:{n:'Ngực (đẩy, ép)',min:8,lv:'Nhẹ - Vừa',ex:[{e:'incline',sets:3,amt:'8–12 lần',rest:60},{e:'pushup3',sets:3,amt:'6–10 lần',rest:60},{e:'palm',sets:3,amt:'ép 5 giây × 5 lần',rest:30},{e:'decline',sets:2,amt:'5–8 lần',rest:60}],tip:'Chưa làm nổi 6 lần hít đất quỳ gối thì chỉ làm bài tay chống ghế. Bài chân kê ghế để dành khi đã khỏe hơn.'},
+ arms:{n:'Tay trước & tay sau',min:8,lv:'Nhẹ',ex:[{e:'curl',sets:3,amt:'10 lần',rest:45},{e:'hammer',sets:2,amt:'10 lần',rest:45},{e:'triext',sets:3,amt:'10 lần',rest:45},{e:'kickback',sets:2,amt:'10 lần mỗi tay',rest:45}],tip:'Dùng chai nước 1–1.5 lít, khi nhẹ quá thì đổ đầy cát hoặc dùng balo có sách.'},
+ legs2:{n:'Chân nâng cao (đùi, mông)',min:9,lv:'Nhẹ - Vừa',ex:[{e:'sumo',sets:3,amt:'12 lần',rest:60},{e:'rlunge',sets:2,amt:'8 lần mỗi chân',rest:60},{e:'stepup',sets:3,amt:'8 lần mỗi chân',rest:60},{e:'wallsit',sets:2,amt:'30 giây',sec:30,rest:45},{e:'bridge1',sets:2,amt:'8 lần mỗi chân',rest:45},{e:'sidelg',sets:2,amt:'12 lần mỗi chân',rest:30}],tip:'Bài nào khó quá thì bỏ bớt, giữ lại sumo squat, lunge lùi và wall sit.'},
  walk:{n:'Đi bộ nhẹ',min:10,lv:'Rất nhẹ',ex:[{e:'walk',sets:1,amt:'10 phút',sec:600}]},
  stretch:{n:'Giãn cơ & thư giãn',min:5,lv:'Rất nhẹ',ex:[{e:'quad',sets:2,amt:'30 giây mỗi bên',sec:30,rest:10},{e:'chest',sets:1,amt:'30 giây',sec:30},{e:'hamstring',sets:2,amt:'30 giây',sec:30,rest:10},{e:'child',sets:1,amt:'60 giây',sec:60},{e:'breath',sets:1,amt:'10 nhịp'}]}
 };
 const PLAN=[ // 0 = Chủ nhật
  {n:'Chủ nhật',s:'CN',rest:true,title:'Nghỉ nhẹ',desc:'Vận động rất nhẹ để cơ phục hồi.',mods:['walk','stretch']},
- {n:'Thứ 2',s:'T2',title:'Ngực, vai, tay',desc:'Thân trên.',mods:['warm','push','shoulder']},
+ {n:'Thứ 2',s:'T2',title:'Ngực, vai, tay sau',desc:'Thân trên: đẩy.',mods:['warm','chest','shoulder']},
  {n:'Thứ 3',s:'T3',rest:true,title:'Nghỉ nhẹ',desc:'Đi bộ và giãn cơ.',mods:['walk','stretch']},
  {n:'Thứ 4',s:'T4',title:'Chân & mông',desc:'Nhóm cơ lớn, giúp tăng cân hiệu quả.',mods:['warm','legs','glute']},
- {n:'Thứ 5',s:'T5',rest:true,title:'Nghỉ nhẹ',desc:'Đi bộ và giãn cơ.',mods:['walk','stretch']},
+ {n:'Thứ 5',s:'T5',title:'Tay trước & tay sau',desc:'Buổi nhẹ cho tay.',mods:['warm','arms','stretch']},
  {n:'Thứ 6',s:'T6',title:'Lưng & bụng',desc:'Dùng balo làm tạ.',mods:['warm','back','core']},
- {n:'Thứ 7',s:'T7',title:'Toàn thân nhẹ',desc:'Kết hợp các động tác đã học.',mods:['warm','full','stretch']}
+ {n:'Thứ 7',s:'T7',title:'Chân nâng cao',desc:'Đùi, mông, giữ thăng bằng.',mods:['warm','legs2','stretch']}
 ];
 
 const blank=()=>({p:{h:170,a:22,s:'m',g:60,pace:350,act:1.375},w:[],c:{},cup:{},wo:{},rem:false,remW:false,nt:{},updatedAt:0});
